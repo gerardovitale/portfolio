@@ -1,0 +1,36 @@
+---
+import { ExperienceAccordion } from "../components/ExperienceAccordion";
+import PageIntro from "../components/PageIntro.astro";
+import { siteData } from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Experience"
+  description="Selected roles, achievements, and delivery habits."
+>
+  <PageIntro
+    eyebrow="Experience / CV"
+    title="Experience built around resilience, ownership, and readable systems."
+    description="I work best where infrastructure, analytics, and product concerns overlap. The common thread is turning vague demand into dependable delivery."
+  />
+
+  <section class="section">
+    <div class="shell split">
+      <div class="stack">
+        <span class="eyebrow">Timeline</span>
+        <h2
+          style="font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1; margin: 0;"
+        >
+          Selected roles
+        </h2>
+        <p class="muted">
+          The accordion keeps this route compact on smaller screens while still
+          exposing detailed outcomes on demand.
+        </p>
+      </div>
+
+      <ExperienceAccordion client:load entries={siteData.experience} />
+    </div>
+  </section>
+</BaseLayout>

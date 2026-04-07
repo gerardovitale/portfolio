@@ -1,0 +1,26 @@
+services:
+  portfolio:
+    image: ${PORTFOLIO_IMAGE}
+    restart: unless-stopped
+    expose:
+      - "8080"
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    depends_on:
+      - portfolio
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      SITE_HOST: ${SITE_HOST}
+      SITE_EMAIL: ${SITE_EMAIL}
+
+volumes:
+  caddy_data:
+  caddy_config:

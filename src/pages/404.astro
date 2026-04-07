@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Not Found"
+  description="The requested page could not be found."
+>
+  <section class="section">
+    <div class="shell split">
+      <div class="stack">
+        <span class="eyebrow">404</span>
+        <h1 class="headline">This route does not exist.</h1>
+        <p class="subheadline">
+          The link may be stale, the path may be mistyped, or the page may have
+          moved.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-body stack">
+          <span class="eyebrow">Next step</span>
+          <p class="muted">
+            Return to the portfolio index or move through one of the primary
+            sections.
+          </p>
+          <div class="link-row">
+            <a class="button-primary" href="/">Go home</a>
+            <a class="button-secondary" href="/projects">View projects</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

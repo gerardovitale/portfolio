@@ -1,0 +1,54 @@
+---
+import { siteData } from "../data/site";
+---
+
+<footer class="footer">
+  <div class="shell footer-grid">
+    <div class="stack">
+      <span class="eyebrow">Contact</span>
+      <p class="footer-copy">{siteData.person.availability}</p>
+      <a href={`mailto:${siteData.person.email}`}>{siteData.person.email}</a>
+    </div>
+
+    <div class="stack">
+      <span class="eyebrow">Profiles</span>
+      <div class="link-row">
+        {
+          siteData.person.socialLinks.map((link) => (
+            <a
+              href={link.href}
+              target={link.external ? "_blank" : undefined}
+              rel="noreferrer"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: var(--line);
+    padding: var(--space-7) 0 var(--space-6);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .footer-copy {
+    margin: 0;
+    color: var(--color-text-muted);
+    max-width: 34rem;
+  }
+
+  @media (min-width: 48rem) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    }
+  }
+</style>
