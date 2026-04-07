@@ -27,6 +27,7 @@ tmp/
 
 # Local tooling
 .codex/
+.husky/_/
 
 # OS and editor files
 .DS_Store

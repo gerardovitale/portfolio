@@ -21,6 +21,8 @@
 - `npm run typecheck`: run `astro check`.
 - `npm run test:unit`: run Vitest unit tests.
 - `npm run test:e2e`: run Playwright browser and accessibility tests.
+- `npm run check:pre-commit`: run the local commit gate.
+- `npm run check:pre-push`: run the full push gate.
 - `npm run check`: run the full validation sequence locally in CI order.
 - `docker build --build-arg PUBLIC_SITE_URL=https://example.com .`: verify the production image path.
 
@@ -43,6 +45,7 @@
 - Use trunk-based development: branch from `master`, keep branches short-lived, and merge small, releasable changes back quickly.
 - Use short imperative commit messages, for example: `Fix active nav path normalization`.
 - Keep commits focused; separate content edits from tooling or infra changes when practical.
+- Local hooks are enforced with Husky. `pre-commit` runs the fast gate; `pre-push` runs `npm run check`.
 - PRs should include:
 - a short summary of user-facing and technical changes
 - linked issue or task reference if one exists

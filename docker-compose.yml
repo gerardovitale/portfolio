@@ -2,5 +2,7 @@ services:
   portfolio:
     build:
       context: .
+      args:
+        PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-https://portfolio.example.com}
     ports:
       - "8080:8080"

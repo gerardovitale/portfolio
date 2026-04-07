@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderToStaticMarkup } from "react-dom/server";
 import { ExperienceAccordion } from "./ExperienceAccordion";
 
 const duplicateEmployerEntries = [
@@ -23,6 +24,14 @@ const duplicateEmployerEntries = [
 ];
 
 describe("ExperienceAccordion", () => {
+  it("renders all panels open in server markup as a no-js fallback", () => {
+    const markup = renderToStaticMarkup(
+      <ExperienceAccordion entries={duplicateEmployerEntries} />,
+    );
+
+    expect(markup).not.toContain("hidden");
+  });
+
   it("opens only the selected duplicate-employer entry", async () => {
     const user = userEvent.setup();
 

@@ -41,6 +41,19 @@ Or run the full sequence with:
 npm run check
 ```
 
+## Git Hooks
+
+Husky is configured through `npm install` via the `prepare` script.
+
+- `pre-commit`: runs `npm run check:pre-commit`
+- `pre-push`: runs `npm run check:pre-push`
+
+If hooks stop working locally, run:
+
+```bash
+npm run prepare
+```
+
 ## Production Preview
 
 ```bash
