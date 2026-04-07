@@ -3,9 +3,10 @@ import type { Project } from "../data/site";
 
 type Props = {
   projects: Project[];
+  searchPlaceholder: string;
 };
 
-export function ProjectFilters({ projects }: Props) {
+export function ProjectFilters({ projects, searchPlaceholder }: Props) {
   const [selectedStatus, setSelectedStatus] = useState<
     "all" | Project["status"]
   >("all");
@@ -39,7 +40,7 @@ export function ProjectFilters({ projects }: Props) {
                 const nextValue = event.currentTarget.value;
                 startTransition(() => setQuery(nextValue));
               }}
-              placeholder="Search by title, stack, or summary"
+              placeholder={searchPlaceholder}
             />
           </label>
 

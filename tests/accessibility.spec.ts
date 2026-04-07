@@ -1,7 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { enabledPageSections } from "../src/data/site";
 
-for (const route of ["/", "/projects", "/experience", "/interests"]) {
+for (const route of [
+  "/",
+  ...enabledPageSections.map((section) => `/${section.id}`),
+]) {
   test(`route ${route} has no critical accessibility violations`, async ({
     page,
   }) => {

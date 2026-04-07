@@ -1,6 +1,7 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import { siteData, themeInlineStyle } from "../data/site";
 import { defaultSiteUrl, makePageTitle } from "../lib/meta";
 import "../styles/global.css";
 
@@ -14,10 +15,11 @@ const {
   description = "Portfolio website for a data engineer focused on resilient systems.",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, defaultSiteUrl).toString();
+const themeColor = siteData.theme.themeColor ?? siteData.theme.palette.accent;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" style={themeInlineStyle}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,7 +30,7 @@ const canonical = new URL(Astro.url.pathname, defaultSiteUrl).toString();
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta name="theme-color" content="#101010" />
+    <meta name="theme-color" content={themeColor} />
   </head>
   <body>
     <Header currentPath={Astro.url.pathname} />

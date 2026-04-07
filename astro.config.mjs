@@ -1,8 +1,26 @@
 import { defineConfig } from "astro/config";
+import { readFileSync } from "node:fs";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import { parse } from "yaml";
 
-const site = process.env.PUBLIC_SITE_URL ?? "https://portfolio.example.com";
+function getConfiguredSiteUrl() {
+  const configUrl = new URL("./site.config.yml", import.meta.url);
+  const rawConfig = readFileSync(configUrl, "utf8");
+  const parsedConfig = parse(rawConfig);
+  const envSiteUrl = process.env.PUBLIC_SITE_URL?.trim();
+  const configuredSiteUrl =
+    parsedConfig &&
+    typeof parsedConfig === "object" &&
+    parsedConfig.seo &&
+    typeof parsedConfig.seo === "object"
+      ? parsedConfig.seo.siteUrl?.trim()
+      : undefined;
+
+  return envSiteUrl || configuredSiteUrl || "https://portfolio.example.com";
+}
+
+const site = getConfiguredSiteUrl();
 
 export default defineConfig({
   site,

@@ -1,0 +1,310 @@
+person:
+  name: Gerardo Vitale
+  role: Data Engineer and Product-Minded Builder
+  location: Madrid, Spain
+  availability: Open to senior data engineering and platform roles.
+  intro: >
+    I design data products and developer tooling that stay understandable under
+    pressure. The focus is durable systems, clear interfaces, and delivery
+    practices that survive real operations.
+  mission: >
+    This portfolio is structured like the way I work: editorially clear,
+    technically grounded, and interactive only where interaction sharpens the
+    story.
+  email: hello@example.com
+  brandMark: GV
+  socialLinks:
+    - label: GitHub
+      href: https://github.com/gerardovitale
+      external: true
+    - label: LinkedIn
+      href: https://www.linkedin.com
+      external: true
+    - label: Email
+      href: mailto:hello@example.com
+      external: false
+
+seo:
+  title: Gerardo Vitale | Data Engineer
+  description: >
+    Portfolio for a data engineer focused on resilient pipelines, practical
+    platform design, and clear product delivery.
+  siteUrl: https://portfolio.example.com
+
+theme:
+  fonts:
+    body: '"Inter", "Avenir Next", "Segoe UI", sans-serif'
+    display: '"Inter", "Avenir Next", "Segoe UI", sans-serif'
+  palette:
+    background: "#f7f7f5"
+    backgroundStrong: "#ffffff"
+    surface: "#ededea"
+    surfaceStrong: "#e1e1dd"
+    text: "#161616"
+    textMuted: "#4f4f4b"
+    border: "rgba(22, 22, 22, 0.16)"
+    borderStrong: "rgba(22, 22, 22, 0.4)"
+    accent: "#101010"
+    inverse: "#f5f5f1"
+  themeColor: "#101010"
+
+sections:
+  - id: home
+    navLabel: Home
+    hero:
+      eyebrow: Home / Hero (Data Eng)
+      headline: Gerardo Vitale
+      intro: >
+        I design data products and developer tooling that stay understandable
+        under pressure. The focus is durable systems, clear interfaces, and
+        delivery practices that survive real operations.
+      missionLabel: Current framing
+      mission: >
+        This portfolio is structured like the way I work: editorially clear,
+        technically grounded, and interactive only where interaction sharpens
+        the story.
+      availability: Open to senior data engineering and platform roles.
+      primaryCta:
+        label: View projects
+        href: /projects
+      secondaryCta:
+        label: Read experience
+        href: /experience
+      supportNote: >
+        Designed as a static-first website with selective interactivity so the
+        experience remains fast even on modest hardware.
+    stats:
+      - label: Focus
+        value: Platform + Analytics
+        detail: From ingestion to trusted product surfaces.
+      - label: Delivery
+        value: CI-First
+        detail: Every iteration is built to be tested, reviewed, and shipped.
+      - label: Bias
+        value: Operational Clarity
+        detail: Observability, ownership, and maintainability are non-negotiable.
+    principlesIntro:
+      eyebrow: Working principles
+      title: How I like software to behave
+    principles:
+      - title: Build systems people can reason about
+        body: >
+          I prefer explicit data contracts, clear ownership lines, and release
+          paths that do not require heroics at 2 a.m.
+      - title: Keep the user-facing layer responsive
+        body: >
+          Static-first delivery and selective client interactivity are enough
+          for most portfolio and content experiences, especially on constrained
+          hardware.
+      - title: Treat quality as a delivery feature
+        body: >
+          Type checks, tests, accessibility validation, and release automation
+          are part of the product, not afterthoughts.
+
+  - id: projects
+    enabled: true
+    navLabel: Projects
+    intro:
+      eyebrow: Technical Projects
+      title: Projects shaped for delivery, not just presentation.
+      description: >
+        The strongest work here is not only about technical output. It is about
+        clearer contracts, safer release paths, and interfaces that help users
+        decide faster.
+    homeCard:
+      eyebrow: Route 02
+      title: Technical Projects
+      description: Project narratives, tagged work, and delivery context.
+    interaction:
+      eyebrow: Interaction
+      title: Filter the portfolio by intent.
+      description: >
+        The interactive layer on this route is client-side only. Content stays
+        static at build time, and React is used only where state changes improve
+        exploration.
+      searchPlaceholder: Search by title, stack, or summary
+    projects:
+      - slug: zen-portfolio
+        title: Zen Python Portfolio
+        summary: >
+          A monochrome editorial portfolio system translated from Stitch
+          concepts into a production-grade static application.
+        status: featured
+        year: "2026"
+        tags:
+          - Astro
+          - TypeScript
+          - Design Systems
+          - CI/CD
+        highlights:
+          - Converted exploratory screens into a maintainable route structure with typed content.
+          - Designed for Raspberry Pi deployment with static output and containerized delivery.
+        links:
+          - label: View implementation plan
+            href: /projects
+            external: false
+      - slug: trip-optimizer
+        title: Trip Planner and Optimizer
+        summary: >
+          A route and price intelligence concept focused on clear comparative
+          analysis, layered data, and operational trust.
+        status: live
+        year: "2026"
+        tags:
+          - Data Products
+          - Maps
+          - UX
+          - Optimization
+        highlights:
+          - Balanced dense information design with strong content hierarchy.
+          - Defined a path from prototype exploration into measurable product increments.
+        links:
+          - label: Case study route
+            href: /projects
+            external: false
+      - slug: pipeline-observatory
+        title: Pipeline Observatory
+        summary: >
+          An internal-facing operations surface for tracking pipeline health,
+          failed jobs, and release readiness.
+        status: exploration
+        year: "2025"
+        tags:
+          - Observability
+          - Data Engineering
+          - Operations
+        highlights:
+          - Centered alert triage around actionability instead of dashboard sprawl.
+          - Used structured metadata to make failure states obvious to owners and reviewers.
+        links:
+          - label: Experience context
+            href: /experience
+            external: false
+
+  - id: experience
+    enabled: true
+    navLabel: Experience
+    intro:
+      eyebrow: Experience / CV
+      title: Experience built around resilience, ownership, and readable systems.
+      description: >
+        I work best where infrastructure, analytics, and product concerns
+        overlap. The common thread is turning vague demand into dependable
+        delivery.
+    homeCard:
+      eyebrow: Route 03
+      title: Experience / CV
+      description: Roles, achievements, and the operating habits behind the work.
+    timeline:
+      eyebrow: Timeline
+      title: Selected roles
+      description: >
+        The accordion keeps this route compact on smaller screens while still
+        exposing detailed outcomes on demand.
+    entries:
+      - company: Platform and Analytics Team
+        role: Senior Data Engineer
+        period: 2023 - Present
+        location: Madrid / Remote
+        summary: >
+          Leading data platform improvements across ingestion, transformation,
+          observability, and release safety.
+        achievements:
+          - Standardized quality gates for analytics delivery with repeatable testing and CI workflows.
+          - Reduced operational ambiguity by introducing clearer ownership and health signals across pipelines.
+          - Partnered with product teams to turn raw reporting requests into sustained data products.
+      - company: Product Data Studio
+        role: Data Engineer
+        period: 2021 - 2023
+        location: Remote
+        summary: >
+          Built resilient ETL workflows and developer tooling that shortened
+          iteration cycles for analytics teams.
+        achievements:
+          - Designed modular transformation layers that improved confidence in downstream reporting.
+          - Introduced code review and CI standards that made data changes easier to validate before release.
+      - company: Independent Projects
+        role: Builder and Consultant
+        period: 2019 - 2021
+        location: Spain
+        summary: >
+          Worked across portfolio sites, business dashboards, and
+          automation-heavy internal tools with a focus on simplicity.
+        achievements:
+          - Delivered static-first websites with clear deployment and rollback stories for small teams.
+          - Translated rough concepts into maintainable systems instead of one-off handoffs.
+
+  - id: interests
+    enabled: true
+    navLabel: Interests
+    intro:
+      eyebrow: Stack and Interests
+      title: The tools I use and the problems I keep returning to.
+      description: >
+        This route ties together technical preference, delivery practice, and
+        the subjects that keep shaping my approach to software.
+    homeCard:
+      eyebrow: Route 04
+      title: Stack and Interests
+      description: >
+        Tools, technical preferences, and the problems I am naturally pulled
+        toward.
+    skillsHeading:
+      eyebrow: Capabilities
+      title: Tools and operating preferences
+    skillGroups:
+      - title: Data Platforms
+        description: >
+          Systems that move, validate, and publish data with strong operational
+          visibility.
+        items:
+          - Python
+          - SQL
+          - dbt
+          - Airflow
+          - Data Modeling
+          - Observability
+      - title: Product Engineering
+        description: >
+          Interfaces and tooling that make technical systems easier to trust and
+          use.
+        items:
+          - TypeScript
+          - React
+          - Astro
+          - Design Systems
+          - Testing
+          - Accessibility
+      - title: Delivery Practice
+        description: >
+          The release discipline that turns good code into dependable software.
+        items:
+          - GitHub Actions
+          - Docker
+          - CI/CD
+          - Release Management
+          - Documentation
+          - Code Review
+    interestsHeading:
+      eyebrow: Interests
+      title: What keeps my attention
+    interests:
+      - title: Editorial interface systems
+        summary: >
+          I am drawn to interfaces that use spacing, rhythm, and tone to create
+          clarity without visual noise.
+      - title: Low-friction home deployments
+        summary: >
+          Raspberry Pi and small-device hosting force useful product discipline:
+          fast startup, low overhead, clear ops.
+      - title: Tooling for calm operations
+        summary: >
+          The best internal tools reduce ambiguity and help teams make the next
+          correct decision quickly.
+    nowHeading:
+      eyebrow: Now
+      title: Current focus
+    now:
+      - Building a production-ready portfolio from Stitch design explorations.
+      - Refining a data-engineering narrative that emphasizes product thinking, not only pipelines.
+      - Keeping the delivery path light enough to run comfortably on Raspberry Pi hardware.

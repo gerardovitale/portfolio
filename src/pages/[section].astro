@@ -1,0 +1,165 @@
+---
+import { ExperienceAccordion } from "../components/ExperienceAccordion";
+import PageIntro from "../components/PageIntro.astro";
+import { ProjectFilters } from "../components/ProjectFilters";
+import {
+  allProjectTags,
+  enabledPageSections,
+  getPageSection,
+  isKnownPageSectionId,
+} from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return enabledPageSections.map((section) => ({
+    params: { section: section.id },
+  }));
+}
+
+const sectionParam = Astro.params.section;
+
+if (!sectionParam || !isKnownPageSectionId(sectionParam)) {
+  throw new Error(`Unknown section route: ${sectionParam ?? "missing"}`);
+}
+
+const pageSection =
+  sectionParam === "projects"
+    ? getPageSection("projects")
+    : sectionParam === "experience"
+      ? getPageSection("experience")
+      : getPageSection("interests");
+
+const projectsSection =
+  sectionParam === "projects" ? getPageSection("projects") : null;
+const experienceSection =
+  sectionParam === "experience" ? getPageSection("experience") : null;
+const interestsSection =
+  sectionParam === "interests" ? getPageSection("interests") : null;
+---
+
+<BaseLayout
+  title={pageSection.navLabel}
+  description={pageSection.intro.description}
+>
+  <PageIntro
+    eyebrow={pageSection.intro.eyebrow}
+    title={pageSection.intro.title}
+    description={pageSection.intro.description}
+  />
+
+  {
+    projectsSection && (
+      <section class="section">
+        <div class="shell split">
+          <div class="stack">
+            <span class="eyebrow">{projectsSection.interaction.eyebrow}</span>
+            <h2 class="section-title">{projectsSection.interaction.title}</h2>
+            <p class="muted">{projectsSection.interaction.description}</p>
+            <div class="link-row">
+              {allProjectTags.map((tag) => (
+                <span class="pill">{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          <ProjectFilters
+            client:load
+            projects={projectsSection.projects}
+            searchPlaceholder={projectsSection.interaction.searchPlaceholder}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    experienceSection && (
+      <section class="section">
+        <div class="shell split">
+          <div class="stack">
+            <span class="eyebrow">{experienceSection.timeline.eyebrow}</span>
+            <h2 class="section-title">{experienceSection.timeline.title}</h2>
+            <p class="muted">{experienceSection.timeline.description}</p>
+          </div>
+
+          <ExperienceAccordion
+            client:load
+            entries={experienceSection.entries}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    interestsSection && (
+      <>
+        <section class="section">
+          <div class="shell stack">
+            <div class="stack">
+              <span class="eyebrow">
+                {interestsSection.skillsHeading.eyebrow}
+              </span>
+              <h2 class="section-title">
+                {interestsSection.skillsHeading.title}
+              </h2>
+            </div>
+
+            <div class="grid grid-three">
+              {interestsSection.skillGroups.map((group) => (
+                <article class="card">
+                  <div class="card-body stack">
+                    <span class="eyebrow">{group.title}</span>
+                    <p class="muted">{group.description}</p>
+                    <div class="link-row">
+                      {group.items.map((item) => (
+                        <span class="pill">{item}</span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell split">
+            <div class="stack">
+              <span class="eyebrow">
+                {interestsSection.interestsHeading.eyebrow}
+              </span>
+              <h2 class="section-title">
+                {interestsSection.interestsHeading.title}
+              </h2>
+            </div>
+            <div class="stack">
+              {interestsSection.interests.map((interest) => (
+                <article class="card">
+                  <div class="card-body stack">
+                    <h3 class="card-title">{interest.title}</h3>
+                    <p class="muted">{interest.summary}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell split">
+            <div class="stack">
+              <span class="eyebrow">{interestsSection.nowHeading.eyebrow}</span>
+              <h2 class="section-title">{interestsSection.nowHeading.title}</h2>
+            </div>
+            <div class="stack">
+              {interestsSection.now.map((item) => (
+                <div class="surface-note">{item}</div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </>
+    )
+  }
+</BaseLayout>

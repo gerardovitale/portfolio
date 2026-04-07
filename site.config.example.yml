@@ -1,0 +1,158 @@
+# Copy this file to `site.config.yml` and replace the example content.
+# Every portfolio uses the same codebase and only changes this file.
+
+person:
+  name: Ada Example
+  role: Product Engineer
+  location: Lisbon, Portugal
+  availability: Open to senior product and platform engineering roles.
+  intro: >
+    Short homepage intro. Keep this to two or three sentences.
+  mission: >
+    Short explanation of how you work or what this portfolio is meant to show.
+  email: ada@example.com
+  brandMark: AE
+  socialLinks:
+    - label: GitHub
+      href: https://github.com/example
+      external: true
+    - label: LinkedIn
+      href: https://www.linkedin.com/in/example
+      external: true
+
+seo:
+  title: Ada Example | Product Engineer
+  description: Short site description for search and sharing cards.
+  siteUrl: https://portfolio.example.com
+
+theme:
+  fonts:
+    body: 'Georgia, "Times New Roman", serif'
+    display: '"Avenir Next", "Segoe UI", sans-serif'
+  palette:
+    background: "#f9f6ef"
+    backgroundStrong: "#fffdf7"
+    surface: "#efe6d7"
+    surfaceStrong: "#e4d5bc"
+    text: "#1a1814"
+    textMuted: "#5a5142"
+    border: "rgba(26, 24, 20, 0.16)"
+    borderStrong: "rgba(26, 24, 20, 0.4)"
+    accent: "#965b2f"
+    inverse: "#fffaf1"
+  themeColor: "#965b2f"
+
+sections:
+  - id: home
+    navLabel: Home
+    hero:
+      eyebrow: Home
+      headline: Ada Example
+      intro: Short homepage intro.
+      missionLabel: Current framing
+      mission: What this site should communicate.
+      availability: Open to selected roles and collaborations.
+      primaryCta:
+        label: View projects
+        href: /projects
+      secondaryCta:
+        label: Read experience
+        href: /experience
+      supportNote: Supporting note shown beside the hero.
+    stats:
+      - label: Focus
+        value: Product + Platform
+        detail: What you tend to build.
+    principlesIntro:
+      eyebrow: Working principles
+      title: How I like software to behave
+    principles:
+      - title: Principle title
+        body: Principle description.
+
+  - id: projects
+    enabled: true
+    navLabel: Projects
+    intro:
+      eyebrow: Projects
+      title: Project page heading
+      description: Intro paragraph for the projects page.
+    homeCard:
+      eyebrow: Route 02
+      title: Projects
+      description: Card copy shown on the homepage.
+    interaction:
+      eyebrow: Interaction
+      title: Filter the portfolio by intent.
+      description: Supporting copy for the projects tools.
+      searchPlaceholder: Search by title, stack, or summary
+    projects:
+      - slug: sample-project
+        title: Sample project
+        summary: Short summary.
+        status: featured
+        year: "2026"
+        tags:
+          - Astro
+          - TypeScript
+        highlights:
+          - Highlight one
+        links:
+          - label: View project
+            href: /projects
+            external: false
+
+  - id: experience
+    enabled: true
+    navLabel: Experience
+    intro:
+      eyebrow: Experience
+      title: Experience page heading
+      description: Intro paragraph for the experience page.
+    homeCard:
+      eyebrow: Route 03
+      title: Experience
+      description: Card copy shown on the homepage.
+    timeline:
+      eyebrow: Timeline
+      title: Selected roles
+      description: Supporting copy for the accordion.
+    entries:
+      - company: Example Company
+        role: Staff Engineer
+        period: 2022 - Present
+        location: Remote
+        summary: Short role summary.
+        achievements:
+          - Achievement one
+
+  - id: interests
+    enabled: false
+    navLabel: Interests
+    intro:
+      eyebrow: Interests
+      title: Interests page heading
+      description: Intro paragraph for the interests page.
+    homeCard:
+      eyebrow: Route 04
+      title: Interests
+      description: Card copy shown on the homepage.
+    skillsHeading:
+      eyebrow: Capabilities
+      title: Tools and operating preferences
+    skillGroups:
+      - title: Engineering
+        description: Short skill group description.
+        items:
+          - TypeScript
+    interestsHeading:
+      eyebrow: Interests
+      title: What keeps my attention
+    interests:
+      - title: Calm software
+        summary: Short summary.
+    nowHeading:
+      eyebrow: Now
+      title: Current focus
+    now:
+      - One current focus item

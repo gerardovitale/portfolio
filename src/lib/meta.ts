@@ -1,10 +1,14 @@
+import { siteData } from "../data/site";
+
+const envSiteUrl = import.meta.env.PUBLIC_SITE_URL?.trim();
+
 export const defaultSiteUrl =
-  import.meta.env.PUBLIC_SITE_URL ?? "https://portfolio.example.com";
+  (envSiteUrl || siteData.seo.siteUrl) ?? "https://portfolio.example.com";
 
 export function makePageTitle(title?: string) {
   if (!title) {
-    return "Gerardo Vitale | Data Engineer";
+    return siteData.seo.title;
   }
 
-  return `${title} | Gerardo Vitale`;
+  return `${title} | ${siteData.person.name}`;
 }

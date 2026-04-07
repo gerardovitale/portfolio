@@ -1,33 +1,37 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { siteData } from "../data/site";
+import { homeSection, optionalHomeCards } from "../data/site";
 ---
 
-<BaseLayout title="Home" description={siteData.seo.description}>
+<BaseLayout description={homeSection.hero.intro}>
   <section class="section">
     <div class="shell split">
       <div class="stack">
-        <span class="eyebrow">Home / Hero (Data Eng)</span>
-        <h1 class="headline">{siteData.person.name}</h1>
-        <p class="subheadline">{siteData.person.intro}</p>
+        <span class="eyebrow">{homeSection.hero.eyebrow}</span>
+        <h1 class="headline">{homeSection.hero.headline}</h1>
+        <p class="subheadline">{homeSection.hero.intro}</p>
       </div>
 
       <div class="stack">
         <div class="card">
           <div class="card-body stack">
-            <span class="eyebrow">Current framing</span>
-            <p>{siteData.person.mission}</p>
-            <p class="muted">{siteData.person.availability}</p>
+            <span class="eyebrow">{homeSection.hero.missionLabel}</span>
+            <p>{homeSection.hero.mission}</p>
+            <p class="muted">{homeSection.hero.availability}</p>
             <div class="link-row">
-              <a class="button-primary" href="/projects">View projects</a>
-              <a class="button-secondary" href="/experience">Read experience</a>
+              <a class="button-primary" href={homeSection.hero.primaryCta.href}>
+                {homeSection.hero.primaryCta.label}
+              </a>
+              <a
+                class="button-secondary"
+                href={homeSection.hero.secondaryCta.href}
+              >
+                {homeSection.hero.secondaryCta.label}
+              </a>
             </div>
           </div>
         </div>
-        <div class="surface-note">
-          Designed as a static-first website with selective interactivity so the
-          experience remains fast even on modest hardware.
-        </div>
+        <div class="surface-note">{homeSection.hero.supportNote}</div>
       </div>
     </div>
   </section>
@@ -36,11 +40,11 @@ import { siteData } from "../data/site";
     <div class="shell">
       <div class="grid grid-three">
         {
-          siteData.stats.map((stat) => (
+          homeSection.stats.map((stat) => (
             <article class="card">
               <div class="card-body stack">
                 <span class="eyebrow">{stat.label}</span>
-                <strong style="font-size: 1.35rem;">{stat.value}</strong>
+                <strong class="stat-value">{stat.value}</strong>
                 <p class="muted">{stat.detail}</p>
               </div>
             </article>
@@ -53,22 +57,16 @@ import { siteData } from "../data/site";
   <section class="section">
     <div class="shell split">
       <div class="stack">
-        <span class="eyebrow">Working principles</span>
-        <h2
-          style="font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1; margin: 0;"
-        >
-          How I like software to behave
-        </h2>
+        <span class="eyebrow">{homeSection.principlesIntro.eyebrow}</span>
+        <h2 class="section-title">{homeSection.principlesIntro.title}</h2>
       </div>
 
       <div class="stack">
         {
-          siteData.principles.map((principle) => (
+          homeSection.principles.map((principle) => (
             <article class="card">
               <div class="card-body stack">
-                <h3 style="margin: 0; font-size: 1.15rem;">
-                  {principle.title}
-                </h3>
+                <h3 class="card-title">{principle.title}</h3>
                 <p class="muted">{principle.body}</p>
               </div>
             </article>
@@ -80,34 +78,17 @@ import { siteData } from "../data/site";
 
   <section class="section">
     <div class="shell grid grid-two">
-      <a class="card" href="/projects">
-        <div class="card-body stack">
-          <span class="eyebrow">Route 02</span>
-          <h2 style="margin: 0;">Technical Projects</h2>
-          <p class="muted">
-            Project narratives, tagged work, and delivery context.
-          </p>
-        </div>
-      </a>
-      <a class="card" href="/experience">
-        <div class="card-body stack">
-          <span class="eyebrow">Route 03</span>
-          <h2 style="margin: 0;">Experience / CV</h2>
-          <p class="muted">
-            Roles, achievements, and the operating habits behind the work.
-          </p>
-        </div>
-      </a>
-      <a class="card" href="/interests">
-        <div class="card-body stack">
-          <span class="eyebrow">Route 04</span>
-          <h2 style="margin: 0;">Stack and Interests</h2>
-          <p class="muted">
-            Tools, technical preferences, and the problems I am naturally pulled
-            toward.
-          </p>
-        </div>
-      </a>
+      {
+        optionalHomeCards.map((card) => (
+          <a class="card" href={card.href}>
+            <div class="card-body stack">
+              <span class="eyebrow">{card.eyebrow}</span>
+              <h2 class="card-link-title">{card.title}</h2>
+              <p class="muted">{card.description}</p>
+            </div>
+          </a>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>

@@ -1,31 +1,25 @@
 ---
+import { navigationItems, siteData } from "../data/site";
 import { normalizePath } from "../lib/routing";
 
 const { currentPath = "/" } = Astro.props;
 const normalizedCurrentPath = normalizePath(currentPath);
-
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
-  { href: "/experience", label: "Experience" },
-  { href: "/interests", label: "Interests" },
-];
 ---
 
 <header class="header">
   <div class="shell header-inner">
     <a class="brand" href="/">
-      <span class="brand-mark">GV</span>
+      <span class="brand-mark">{siteData.person.brandMark}</span>
       <span class="brand-copy">
-        <strong>Gerardo Vitale</strong>
-        <span>Data engineer</span>
+        <strong>{siteData.person.name}</strong>
+        <span>{siteData.person.role}</span>
       </span>
     </a>
 
     <nav aria-label="Primary">
       <ul class="nav-list">
         {
-          navItems.map((item) => (
+          navigationItems.map((item) => (
             <li>
               <a
                 href={item.href}
@@ -54,7 +48,7 @@ const navItems = [
     z-index: 10;
     backdrop-filter: blur(18px);
     border-bottom: var(--line);
-    background: rgba(247, 247, 245, 0.8);
+    background: var(--color-bg);
   }
 
   .header-inner {
@@ -90,6 +84,7 @@ const navItems = [
   }
 
   .brand-copy strong {
+    font-family: var(--font-display);
     font-size: 0.95rem;
     font-weight: 600;
   }
@@ -118,7 +113,7 @@ const navItems = [
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-size: 0.73rem;
-    background: rgba(255, 255, 255, 0.48);
+    background: var(--color-bg-strong);
     transition:
       border-color var(--transition-fast),
       background-color var(--transition-fast),
