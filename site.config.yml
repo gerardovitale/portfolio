@@ -126,25 +126,6 @@ sections:
         exploration.
       searchPlaceholder: Search by title, stack, or summary
     projects:
-      - slug: zen-portfolio
-        title: Zen Python Portfolio
-        summary: >
-          A monochrome editorial portfolio system translated from Stitch
-          concepts into a production-grade static application.
-        status: featured
-        year: "2026"
-        tags:
-          - Astro
-          - TypeScript
-          - Design Systems
-          - CI/CD
-        highlights:
-          - Converted exploratory screens into a maintainable route structure with typed content.
-          - Designed for Raspberry Pi deployment with static output and containerized delivery.
-        links:
-          - label: View implementation plan
-            href: /home
-            external: false
       - slug: fuel-precision
         title: Fuel Precision
         summary: >
@@ -170,6 +151,25 @@ sections:
           - label: GitHub repo
             href: https://github.com/gerardovitale/travel-assistant
             external: true
+      - slug: zen-portfolio
+        title: Zen Python Portfolio
+        summary: >
+          A monochrome editorial portfolio system translated from Stitch
+          concepts into a production-grade static application.
+        status: featured
+        year: "2026"
+        tags:
+          - Astro
+          - TypeScript
+          - Design Systems
+          - CI/CD
+        highlights:
+          - Converted exploratory screens into a maintainable route structure with typed content.
+          - Designed for Raspberry Pi deployment with static output and containerized delivery.
+        links:
+          - label: View implementation plan
+            href: /home
+            external: false
 
   - id: experience
     enabled: true
