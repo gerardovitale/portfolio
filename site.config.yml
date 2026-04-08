@@ -143,45 +143,33 @@ sections:
           - Designed for Raspberry Pi deployment with static output and containerized delivery.
         links:
           - label: View implementation plan
-            href: /projects
+            href: /home
             external: false
-      - slug: trip-optimizer
-        title: Trip Planner and Optimizer
+      - slug: fuel-precision
+        title: Fuel Precision
         summary: >
-          A route and price intelligence concept focused on clear comparative
-          analysis, layered data, and operational trust.
+          Live fuel price intelligence platform for Spain that turns daily
+          government station data into route-aware search, trip planning, and
+          regional price analysis.
         status: live
         year: "2026"
         tags:
+          - Python
+          - FastAPI
+          - DuckDB
+          - GCP
           - Data Products
-          - Maps
-          - UX
-          - Optimization
+          - Geospatial
         highlights:
-          - Balanced dense information design with strong content hierarchy.
-          - Defined a path from prototype exploration into measurable product increments.
+          - "Built an end-to-end data product: daily ingestion from Spain's government fuel API into Parquet on GCS, then low-latency analytical serving through DuckDB and FastAPI."
+          - Shipped user-facing decision tools including best-station ranking by total trip cost, route-based fuel stop planning, and map-driven regional price exploration.
         links:
-          - label: Case study route
-            href: /projects
-            external: false
-      - slug: pipeline-observatory
-        title: Pipeline Observatory
-        summary: >
-          An internal-facing operations surface for tracking pipeline health,
-          failed jobs, and release readiness.
-        status: exploration
-        year: "2025"
-        tags:
-          - Observability
-          - Data Engineering
-          - Operations
-        highlights:
-          - Centered alert triage around actionability instead of dashboard sprawl.
-          - Used structured metadata to make failure states obvious to owners and reviewers.
-        links:
-          - label: Experience context
-            href: /experience
-            external: false
+          - label: Live app
+            href: https://fuelprecision.com
+            external: true
+          - label: GitHub repo
+            href: https://github.com/gerardovitale/travel-assistant
+            external: true
 
   - id: experience
     enabled: true
