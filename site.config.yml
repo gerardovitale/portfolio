@@ -1,34 +1,36 @@
 person:
   name: Gerardo Vitale
-  role: Data Engineer and Product-Minded Builder
+  role: Data Engineer and Data Platform Builder
   location: Madrid, Spain
-  availability: Open to senior data engineering and platform roles.
+  availability: Open to data engineering roles where platform reliability and business impact both matter.
   intro: >
-    I design data products and developer tooling that stay understandable under
-    pressure. The focus is durable systems, clear interfaces, and delivery
-    practices that survive real operations.
+    I design and evolve data platforms that stay dependable under production
+    pressure. My work spans Python, Spark, SQL, dbt, SQLMesh, and cloud-native
+    architectures, with a bias toward reliable pipelines and high-trust
+    analytics delivery.
   mission: >
-    This portfolio is structured like the way I work: editorially clear,
-    technically grounded, and interactive only where interaction sharpens the
-    story.
-  email: hello@example.com
+    I like building data systems that teams can audit, evolve, and rely on for
+    decisions. The focus is practical DataOps, resilient architecture, and
+    delivery practices that keep business-critical data products moving.
+  email: gerardo.vitale.errico@gmail.com
   brandMark: GV
   socialLinks:
     - label: GitHub
       href: https://github.com/gerardovitale
       external: true
     - label: LinkedIn
-      href: https://www.linkedin.com
+      href: https://www.linkedin.com/in/gerardo-vitale-errico/
       external: true
     - label: Email
-      href: mailto:hello@example.com
+      href: mailto:gerardo.vitale.errico@gmail.com
       external: false
 
 seo:
   title: Gerardo Vitale | Data Engineer
   description: >
-    Portfolio for a data engineer focused on resilient pipelines, practical
-    platform design, and clear product delivery.
+    Portfolio for a data engineer focused on scalable data platforms, DataOps,
+    and reliable analytics delivery across energy, healthcare, e-commerce, and
+    technology domains.
   siteUrl: https://portfolio.example.com
 
 theme:
@@ -55,15 +57,16 @@ sections:
       eyebrow: Home / Hero (Data Eng)
       headline: Gerardo Vitale
       intro: >
-        I design data products and developer tooling that stay understandable
-        under pressure. The focus is durable systems, clear interfaces, and
-        delivery practices that survive real operations.
-      missionLabel: Current framing
+        I build and improve data platforms that stay readable, testable, and
+        reliable under production pressure. The work spans Python, Spark, SQL,
+        dbt, SQLMesh, and cloud-native systems that support business-critical
+        decisions.
+      missionLabel: How I work
       mission: >
-        This portfolio is structured like the way I work: editorially clear,
-        technically grounded, and interactive only where interaction sharpens
-        the story.
-      availability: Open to senior data engineering and platform roles.
+        I care about data quality, release safety, and platform designs teams
+        can actually reason about. The goal is not more pipeline surface area.
+        It is dependable data products with clear operational ownership.
+      availability: Open to data engineering roles where platform reliability and business impact both matter.
       primaryCta:
         label: View projects
         href: /projects
@@ -71,35 +74,34 @@ sections:
         label: Read experience
         href: /experience
       supportNote: >
-        Designed as a static-first website with selective interactivity so the
-        experience remains fast even on modest hardware.
+        Recent work spans EU energy markets and consulting delivery across
+        airline, healthcare, and e-commerce platforms.
     stats:
       - label: Focus
-        value: Platform + Analytics
-        detail: From ingestion to trusted product surfaces.
+        value: Data Platforms
+        detail: From ingestion and transformation to auditable serving layers.
       - label: Delivery
-        value: CI-First
-        detail: Every iteration is built to be tested, reviewed, and shipped.
+        value: DataOps
+        detail: CI/CD, testing, lineage, and quality checks are part of the platform.
       - label: Bias
         value: Operational Clarity
-        detail: Observability, ownership, and maintainability are non-negotiable.
+        detail: Observability, auditability, and maintainability are non-negotiable.
     principlesIntro:
       eyebrow: Working principles
-      title: How I like software to behave
+      title: How I expect data systems to behave
     principles:
       - title: Build systems people can reason about
         body: >
-          I prefer explicit data contracts, clear ownership lines, and release
-          paths that do not require heroics at 2 a.m.
-      - title: Keep the user-facing layer responsive
+          I prefer explicit data contracts, clear lineage, and ownership lines
+          that make debugging and auditing possible without heroics.
+      - title: Treat data quality as product behavior
         body: >
-          Static-first delivery and selective client interactivity are enough
-          for most portfolio and content experiences, especially on constrained
-          hardware.
+          Quality checks, trustworthy metrics, and historical traceability are
+          part of the deliverable, not cleanup work for later.
       - title: Treat quality as a delivery feature
         body: >
-          Type checks, tests, accessibility validation, and release automation
-          are part of the product, not afterthoughts.
+          Testing, infrastructure as code, and repeatable release workflows are
+          what let data teams move quickly without losing control.
 
   - id: projects
     enabled: true
@@ -186,11 +188,11 @@ sections:
     navLabel: Experience
     intro:
       eyebrow: Experience / CV
-      title: Experience built around resilience, ownership, and readable systems.
+      title: Experience across platform engineering, analytics delivery, and data quality.
       description: >
-        I work best where infrastructure, analytics, and product concerns
-        overlap. The common thread is turning vague demand into dependable
-        delivery.
+        Recent work spans EU energy markets and consulting delivery across
+        airline, healthcare, and e-commerce data platforms. The common thread
+        is making complex systems more reliable, auditable, and easier to ship.
     homeCard:
       eyebrow: Route 03
       title: Experience / CV
@@ -199,50 +201,65 @@ sections:
       eyebrow: Timeline
       title: Selected roles
       description: >
-        The accordion keeps this route compact on smaller screens while still
-        exposing detailed outcomes on demand.
+        The work centers on platform modernization, reliable data products, and
+        engineering practices that hold up under real operations.
     entries:
-      - company: Platform and Analytics Team
-        role: Senior Data Engineer
-        period: 2023 - Present
-        location: Madrid / Remote
-        summary: >
-          Leading data platform improvements across ingestion, transformation,
-          observability, and release safety.
-        achievements:
-          - Standardized quality gates for analytics delivery with repeatable testing and CI workflows.
-          - Reduced operational ambiguity by introducing clearer ownership and health signals across pipelines.
-          - Partnered with product teams to turn raw reporting requests into sustained data products.
-      - company: Product Data Studio
+      - company: Axpo
         role: Data Engineer
-        period: 2021 - 2023
-        location: Remote
+        period: Dec 2025 - Present
+        location: Madrid, Spain
         summary: >
-          Built resilient ETL workflows and developer tooling that shortened
-          iteration cycles for analytics teams.
+          Maintains and evolves a Kubernetes-based data platform for asset
+          optimization and logistics workflows in EU energy markets.
         achievements:
-          - Designed modular transformation layers that improved confidence in downstream reporting.
-          - Introduced code review and CI standards that made data changes easier to validate before release.
-      - company: Independent Projects
-        role: Builder and Consultant
-        period: 2019 - 2021
-        location: Spain
+          - Builds backend and platform components with Python, FastAPI, PostgreSQL, and Airflow for internal data services.
+          - Improves scalability, resilience, and day-to-day operability across core platform infrastructure and integrations.
+          - Contributes to an in-house end-to-end lineage solution for row-level traceability, debugging, auditing, and quality investigations.
+      - company: Thoughtworks
+        role: Data Engineer
+        period: Mar 2023 - Dec 2025
+        location: Madrid, Spain
         summary: >
-          Worked across portfolio sites, business dashboards, and
-          automation-heavy internal tools with a focus on simplicity.
+          Delivered data platform and DataOps work across airline, healthcare,
+          and e-commerce engagements, with emphasis on auditable workflows and
+          reliable data products.
         achievements:
-          - Delivered static-first websites with clear deployment and rollback stories for small teams.
-          - Translated rough concepts into maintainable systems instead of one-off handoffs.
+          - Modernized a data serving platform with SQLMesh, Snowflake, AWS Glue, and SYNQ to enable scalable and auditable workflows.
+          - Built a Microsoft Fabric platform PoC with PySpark, Delta, Power BI, Purview, and automated testing backed by Great Expectations.
+          - Improved pipeline performance, metrics reliability, and stakeholder alignment for a leading e-commerce platform.
+      - company: Europe's Leading e-Commerce
+        role: Junior Data Engineer
+        period: Mar 2022 - Mar 2023
+        location: Germany
+        summary: >
+          Helped build a new data platform and business-facing data products for
+          operational monitoring and decision support.
+        achievements:
+          - Designed ELT pipelines from transactional and event-driven systems with Kubernetes-backed CI/CD for dependable releases.
+          - Implemented data quality and observability with PyDeequ, LightStep, and Grafana to keep metrics trustworthy.
+          - Added unit and integration testing and ran demos that kept stakeholders aligned on delivery progress.
+      - company: Telefonica
+        role: Junior Backend Developer
+        period: Sep 2021 - Feb 2022
+        location: Madrid, Spain
+        summary: >
+          Built containerized backend services for the TV Open Platform with
+          strong engineering discipline and cross-functional collaboration.
+        achievements:
+          - Developed microservices using TDD, SOLID principles, and Clean Architecture practices.
+          - Shipped a Python Kafka consumer service integrated with SQL Server and deployed through Jenkins CI/CD.
+          - Added Prometheus metrics and Grafana dashboards for real-time service visibility.
 
   - id: interests
     enabled: true
     navLabel: Interests
     intro:
       eyebrow: Stack and Interests
-      title: The tools I use and the problems I keep returning to.
+      title: The platforms, practices, and data problems I keep returning to.
       description: >
-        This route ties together technical preference, delivery practice, and
-        the subjects that keep shaping my approach to software.
+        This route ties together the tooling I rely on most and the technical
+        patterns I care about: quality, lineage, observability, and reliable
+        analytics delivery.
     homeCard:
       eyebrow: Route 04
       title: Stack and Interests
@@ -255,56 +272,58 @@ sections:
     skillGroups:
       - title: Data Platforms
         description: >
-          Systems that move, validate, and publish data with strong operational
-          visibility.
+          Core tools for building, transforming, and operating production data
+          platforms.
         items:
           - Python
+          - Spark
           - SQL
           - dbt
+          - SQLMesh
           - Airflow
-          - Data Modeling
-          - Observability
-      - title: Product Engineering
+      - title: Cloud and Analytics Stack
         description: >
-          Interfaces and tooling that make technical systems easier to trust and
-          use.
+          Cloud and warehouse tooling I have used to deliver governed analytics
+          and scalable data products.
         items:
-          - TypeScript
-          - React
-          - Astro
-          - Design Systems
-          - Testing
-          - Accessibility
+          - Snowflake
+          - AWS Glue
+          - Microsoft Fabric
+          - Delta Lake
+          - Power BI
+          - GCP
       - title: Delivery Practice
         description: >
-          The release discipline that turns good code into dependable software.
+          The engineering and quality practices that keep data products stable
+          after they ship.
         items:
-          - GitHub Actions
-          - Docker
+          - Kubernetes
+          - Terraform
+          - FastAPI
+          - PostgreSQL
           - CI/CD
-          - Release Management
-          - Documentation
-          - Code Review
+          - Great Expectations
+          - PyDeequ
     interestsHeading:
       eyebrow: Interests
       title: What keeps my attention
     interests:
-      - title: Editorial interface systems
+      - title: Data lineage and auditability
         summary: >
-          I am drawn to interfaces that use spacing, rhythm, and tone to create
-          clarity without visual noise.
-      - title: Low-friction home deployments
+          I keep returning to systems that make data movement explainable, from
+          source changes to downstream business decisions.
+      - title: High-trust data quality systems
         summary: >
-          Raspberry Pi and small-device hosting force useful product discipline:
-          fast startup, low overhead, clear ops.
-      - title: Tooling for calm operations
+          I am interested in checks, observability, and testing strategies that
+          make metrics reliable enough to use with confidence.
+      - title: Domain-heavy platform work
         summary: >
-          The best internal tools reduce ambiguity and help teams make the next
-          correct decision quickly.
+          Energy, healthcare, e-commerce, and travel all force useful tradeoffs
+          between speed, governance, and operational clarity.
     nowHeading:
       eyebrow: Now
       title: Current focus
     now:
-      - Building a production-ready portfolio from Stitch design explorations.
-      - Refining a data-engineering narrative that emphasizes product thinking, not only pipelines.
-      - Keeping the delivery path light enough to run comfortably on Raspberry Pi hardware.
+      - Deepening platform work around lineage, resilience, and day-to-day operability in EU energy markets.
+      - Looking for roles where Python, SQL, and DataOps practices improve business-critical data products.
+      - Continuing to sharpen cloud-native platform and analytics delivery patterns across teams and domains.

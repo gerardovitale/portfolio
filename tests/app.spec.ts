@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { enabledPageSections, homeSection } from "../src/data/site";
 
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 test("routes are reachable from the home page", async ({ page }) => {
   await page.goto("/");
   const primaryNav = page.getByRole("navigation", { name: "Primary" });
@@ -24,8 +28,16 @@ test("routes are reachable from the home page", async ({ page }) => {
     }
 
     if (section.id === "experience") {
+      const firstRole = section.entries[0]?.role;
+      const firstCompany = section.entries[0]?.company;
+
       await expect(
-        page.getByRole("button", { name: /senior data engineer/i }),
+        page.getByRole("button", {
+          name: new RegExp(
+            `${escapeRegex(firstRole ?? "")}.*${escapeRegex(firstCompany ?? "")}`,
+            "i",
+          ),
+        }),
       ).toBeVisible();
     }
 
