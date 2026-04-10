@@ -5,7 +5,7 @@ Static-first portfolio site built with Astro and React islands, driven by a sing
 ## Quick Start
 
 1. Install dependencies with `npm install`.
-2. Copy [site.config.example.yml](/Users/gerardovitale/Documents/repos/protfolio/site.config.example.yml) to `site.config.yml`.
+2. Copy [site.config.example.yml](./site.config.example.yml) to `site.config.yml`.
 3. Replace the example content in `site.config.yml` with your own profile, sections, and theme.
 4. Run `npm run dev` and check the site locally.
 5. Run `npm run check` before opening a PR or deploying.
@@ -73,6 +73,23 @@ npm run prepare
 docker compose up --build
 ```
 
+## Publish to GitHub
+
+If the repository does not exist on GitHub yet, create it first and then push `master`.
+
+With GitHub CLI:
+
+```bash
+gh repo create gerardovitale/portfolio --public --source=. --remote=origin --push
+```
+
+Or create the repository in the GitHub UI and then run:
+
+```bash
+git remote add origin git@github.com:gerardovitale/portfolio.git
+git push -u origin master
+```
+
 ## Raspberry Pi Deployment
 
 The repository includes:
@@ -80,12 +97,34 @@ The repository includes:
 - a multi-stage `Dockerfile`
 - a Pi-oriented compose file at `deploy/docker-compose.pi.yml`
 - a Caddy reverse proxy config at `deploy/Caddyfile`
-- GitHub Actions for CI and release image publishing
+- a Pi runtime env template at `deploy/.env.pi.example`
+- GitHub Actions for CI, release image publishing, and Pi deployment
 
 The intended flow is:
 
 1. Merge to `master`.
 2. GitHub Actions publishes a versioned image to GHCR.
-3. The Raspberry Pi pulls the tagged image and restarts the compose stack.
+3. GitHub Actions connects to the Raspberry Pi over SSH.
+4. The Raspberry Pi pulls `ghcr.io/gerardovitale/portfolio:latest` and restarts the compose stack.
 
-For release builds in GitHub Actions, `PUBLIC_SITE_URL` must be configured as a repository variable so canonical tags and sitemap entries use the production domain.
+GitHub repository configuration:
+
+- repository variable `PUBLIC_SITE_URL=https://gerardo-vitale.com`
+- repository variable `PI_DEPLOY_PATH=/opt/portfolio` if you want to override the default path
+- secret `PI_HOST`
+- secret `PI_USER`
+- secret `PI_SSH_KEY`
+- optional secret `PI_PORT`
+- optional secret `PI_HOST_FINGERPRINT`
+- secret `GHCR_USERNAME`
+- secret `GHCR_PAT` with `read:packages`
+
+Pi bootstrap:
+
+1. Create a deployment directory, for example `/opt/portfolio`.
+2. Copy `deploy/docker-compose.pi.yml`, `deploy/Caddyfile`, and `deploy/.env.pi.example` into that directory.
+3. Rename `deploy/.env.pi.example` to `.env` and set the real values.
+4. Point the domain DNS `A` record to the Pi's public IP.
+5. Forward ports `80` and `443` from the router to the Pi.
+
+For release builds in GitHub Actions, `PUBLIC_SITE_URL` must be set to the production domain so canonical tags and sitemap entries use the live origin.

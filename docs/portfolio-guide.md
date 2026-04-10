@@ -373,19 +373,85 @@ Use `npm run check` before merging or deploying.
 
 - `seo.siteUrl` is used as the default site URL when `PUBLIC_SITE_URL` is not set.
 
+### Publish the Repository to GitHub
+
+If this local repository is not on GitHub yet, create a new public repository and push `master`.
+
+Using GitHub CLI:
+
+```bash
+gh repo create gerardovitale/portfolio --public --source=. --remote=origin --push
+```
+
+Using an existing empty repository:
+
+```bash
+git remote add origin git@github.com:gerardovitale/portfolio.git
+git push -u origin master
+```
+
 ### GitHub Actions Release Builds
 
 - configure `PUBLIC_SITE_URL` as a repository variable
-- this should be the real production origin, for example `https://yourdomain.com`
+- this should be the real production origin, here `https://gerardo-vitale.com`
+- the release workflow publishes a multi-arch image to `ghcr.io/gerardovitale/portfolio`
 
 This matters because canonical URLs and sitemap entries use that value.
+
+### Raspberry Pi Auto-Deploy
+
+The repository is wired for this release path:
+
+1. push or merge to `master`
+2. `CI` validates the site
+3. `Release Image` publishes `latest` and SHA-tagged images to GHCR
+4. `Deploy To Raspberry Pi` SSHes into the Pi and runs `docker compose pull` plus `docker compose up -d`
+
+Create these GitHub repository secrets:
+
+- `PI_HOST`
+- `PI_USER`
+- `PI_SSH_KEY`
+- `PI_PORT` if SSH is not on `22`
+- `PI_HOST_FINGERPRINT` if you want host key pinning
+- `GHCR_USERNAME`
+- `GHCR_PAT` with `read:packages`
+
+Optional repository variable:
+
+- `PI_DEPLOY_PATH`, default `/opt/portfolio`
+
+Prepare the Raspberry Pi once:
+
+1. install Docker and the Docker Compose plugin
+2. create `/opt/portfolio`
+3. copy `deploy/docker-compose.pi.yml` to `/opt/portfolio/docker-compose.pi.yml`
+4. copy `deploy/Caddyfile` to `/opt/portfolio/Caddyfile`
+5. copy `deploy/.env.pi.example` to `/opt/portfolio/.env`
+6. edit `/opt/portfolio/.env` with the production values
+7. make sure the router forwards ports `80` and `443` to the Pi
+8. point the domain `A` record at the public IP used by the Pi
+
+The Pi runtime env file should contain:
+
+```bash
+SITE_HOST=gerardo-vitale.com
+SITE_EMAIL=owner@example.com
+PORTFOLIO_IMAGE=ghcr.io/gerardovitale/portfolio:latest
+```
+
+If you need to roll back, change `PORTFOLIO_IMAGE` to a SHA-tagged image from GHCR and run:
+
+```bash
+docker compose --env-file .env -f docker-compose.pi.yml up -d
+```
 
 ### Docker
 
 To validate the production image path locally:
 
 ```bash
-docker build --build-arg PUBLIC_SITE_URL=https://example.com .
+docker build --build-arg PUBLIC_SITE_URL=https://gerardo-vitale.com .
 ```
 
 ## Troubleshooting
