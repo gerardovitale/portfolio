@@ -394,53 +394,54 @@ git push -u origin master
 
 - configure `PUBLIC_SITE_URL` as a repository variable
 - this should be the real production origin, here `https://gerardo-vitale.com`
-- the release workflow publishes a multi-arch image to `ghcr.io/gerardovitale/portfolio`
+- create Docker Hub secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` in GitHub
+- optional repository variable `DOCKERHUB_IMAGE` can override the target repository
+- if `DOCKERHUB_IMAGE` is not set, the release workflow publishes to the Docker Hub repository matching `github.repository`
+- make sure that Docker Hub repository is public so the Pi can pull it without extra auth
 
 This matters because canonical URLs and sitemap entries use that value.
 
-### Raspberry Pi Auto-Deploy
+### Raspberry Pi Watchtower Deployment
 
 The repository is wired for this release path:
 
 1. push or merge to `master`
 2. `CI` validates the site
-3. `Release Image` publishes `latest` and SHA-tagged images to GHCR
-4. `Deploy To Raspberry Pi` SSHes into the Pi and runs `docker compose pull` plus `docker compose up -d`
-
-Create these GitHub repository secrets:
-
-- `PI_HOST`
-- `PI_USER`
-- `PI_SSH_KEY`
-- `PI_PORT` if SSH is not on `22`
-- `PI_HOST_FINGERPRINT` if you want host key pinning
-- `GHCR_USERNAME`
-- `GHCR_PAT` with `read:packages`
-
-Optional repository variable:
-
-- `PI_DEPLOY_PATH`, default `/opt/portfolio`
+3. `Release Image` publishes `latest` and SHA-tagged images to Docker Hub
+4. `watchtower` on the Pi polls Docker Hub and replaces the running container when `latest` changes
+5. `cloudflared` exposes the local container through a Cloudflare Tunnel
 
 Prepare the Raspberry Pi once:
 
 1. install Docker and the Docker Compose plugin
 2. create `/opt/portfolio`
 3. copy `deploy/docker-compose.pi.yml` to `/opt/portfolio/docker-compose.pi.yml`
-4. copy `deploy/Caddyfile` to `/opt/portfolio/Caddyfile`
-5. copy `deploy/.env.pi.example` to `/opt/portfolio/.env`
-6. edit `/opt/portfolio/.env` with the production values
-7. make sure the router forwards ports `80` and `443` to the Pi
-8. point the domain `A` record at the public IP used by the Pi
+4. copy `deploy/.env.pi.example` to `/opt/portfolio/.env`
+5. edit `/opt/portfolio/.env` with the production values
+6. create a Cloudflare named tunnel and a hostname for `gerardo-vitale.com`
+7. point that hostname at the local service `http://portfolio:8080`
+8. start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`
 
 The Pi runtime env file should contain:
 
 ```bash
-SITE_HOST=gerardo-vitale.com
-SITE_EMAIL=owner@example.com
-PORTFOLIO_IMAGE=ghcr.io/gerardovitale/portfolio:latest
+PORTFOLIO_IMAGE=gerardovitale/portfolio:latest
+CLOUDFLARE_TUNNEL_TOKEN=replace-with-your-cloudflare-tunnel-token
 ```
 
-If you need to roll back, change `PORTFOLIO_IMAGE` to a SHA-tagged image from GHCR and run:
+The deploy stack now contains:
+
+- `portfolio`: the Astro site container
+- `watchtower`: polls Docker Hub every hour and updates only containers labeled for Watchtower
+- `cloudflared`: keeps an outbound tunnel from the Pi to Cloudflare
+
+To force an update immediately instead of waiting for the next Watchtower poll, run:
+
+```bash
+docker compose --env-file .env -f docker-compose.pi.yml run --rm watchtower --run-once
+```
+
+If you need to roll back, change `PORTFOLIO_IMAGE` to a SHA-tagged image from Docker Hub in `/opt/portfolio/.env` and run:
 
 ```bash
 docker compose --env-file .env -f docker-compose.pi.yml up -d

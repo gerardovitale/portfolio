@@ -1,26 +1,45 @@
 services:
   portfolio:
     image: ${PORTFOLIO_IMAGE}
+    container_name: portfolio
     restart: unless-stopped
     expose:
       - "8080"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-  caddy:
-    image: caddy:2.8-alpine
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
     restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_POLL_INTERVAL: "3600"
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
     depends_on:
       - portfolio
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    environment:
-      SITE_HOST: ${SITE_HOST}
-      SITE_EMAIL: ${SITE_EMAIL}
-
-volumes:
-  caddy_data:
-  caddy_config:
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"

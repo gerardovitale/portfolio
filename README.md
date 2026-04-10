@@ -96,35 +96,43 @@ The repository includes:
 
 - a multi-stage `Dockerfile`
 - a Pi-oriented compose file at `deploy/docker-compose.pi.yml`
-- a Caddy reverse proxy config at `deploy/Caddyfile`
+- an optional direct-ingress Caddy config at `deploy/Caddyfile`
 - a Pi runtime env template at `deploy/.env.pi.example`
-- GitHub Actions for CI, release image publishing, and Pi deployment
+- GitHub Actions for CI and release image publishing
 
 The intended flow is:
 
 1. Merge to `master`.
-2. GitHub Actions publishes a versioned image to GHCR.
-3. GitHub Actions connects to the Raspberry Pi over SSH.
-4. The Raspberry Pi pulls `ghcr.io/gerardovitale/portfolio:latest` and restarts the compose stack.
+2. GitHub Actions publishes a versioned image to Docker Hub.
+3. The Raspberry Pi runs `watchtower` and polls Docker Hub for a newer `latest` image.
+4. `cloudflared` exposes the local service through a Cloudflare Tunnel, so the Pi does not need to be publicly reachable.
 
 GitHub repository configuration:
 
 - repository variable `PUBLIC_SITE_URL=https://gerardo-vitale.com`
-- repository variable `PI_DEPLOY_PATH=/opt/portfolio` if you want to override the default path
-- secret `PI_HOST`
-- secret `PI_USER`
-- secret `PI_SSH_KEY`
-- optional secret `PI_PORT`
-- optional secret `PI_HOST_FINGERPRINT`
-- secret `GHCR_USERNAME`
-- secret `GHCR_PAT` with `read:packages`
+- secret `DOCKERHUB_USERNAME`
+- secret `DOCKERHUB_TOKEN`
+- optional repository variable `DOCKERHUB_IMAGE`
+- if `DOCKERHUB_IMAGE` is not set, the release workflow publishes to the Docker Hub repository matching `github.repository`
+- create or confirm that Docker Hub repository and keep it public so the Pi can pull it without extra auth
 
 Pi bootstrap:
 
 1. Create a deployment directory, for example `/opt/portfolio`.
-2. Copy `deploy/docker-compose.pi.yml`, `deploy/Caddyfile`, and `deploy/.env.pi.example` into that directory.
+2. Copy `deploy/docker-compose.pi.yml` and `deploy/.env.pi.example` into that directory.
 3. Rename `deploy/.env.pi.example` to `.env` and set the real values.
-4. Point the domain DNS `A` record to the Pi's public IP.
-5. Forward ports `80` and `443` from the router to the Pi.
+4. In Cloudflare Zero Trust, create a named tunnel and set a public hostname for `gerardo-vitale.com` targeting `http://portfolio:8080`.
+5. Put the generated tunnel token into `.env` as `CLOUDFLARE_TUNNEL_TOKEN`.
+6. Start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`.
+
+Operational notes:
+
+- Watchtower polls every hour by default via `WATCHTOWER_POLL_INTERVAL=3600`.
+- Watchtower only updates containers explicitly labeled for this stack, so it will not restart unrelated services on the Pi.
+- To force an immediate update without waiting for the next poll, run:
+
+```bash
+docker compose --env-file .env -f docker-compose.pi.yml run --rm watchtower --run-once
+```
 
 For release builds in GitHub Actions, `PUBLIC_SITE_URL` must be set to the production domain so canonical tags and sitemap entries use the live origin.
