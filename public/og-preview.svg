@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Gerardo Vitale portfolio preview</title>
+  <desc id="desc">Editorial social preview card for Gerardo Vitale, data engineer and data platform builder.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#ededea" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect x="56" y="56" width="1088" height="518" rx="24" fill="#f7f7f5" stroke="rgba(22,22,22,0.16)" />
+  <rect x="96" y="96" width="240" height="240" rx="20" fill="#101010" />
+  <text x="216" y="240" text-anchor="middle" font-family="Inter, Avenir Next, Segoe UI, sans-serif" font-size="112" fill="#f5f5f1" letter-spacing="10">GV</text>
+  <text x="384" y="188" font-family="Inter, Avenir Next, Segoe UI, sans-serif" font-size="28" fill="#4f4f4b" letter-spacing="6">GERARDO VITALE</text>
+  <text x="384" y="264" font-family="Inter, Avenir Next, Segoe UI, sans-serif" font-size="56" font-weight="700" fill="#161616">Data Engineer and</text>
+  <text x="384" y="332" font-family="Inter, Avenir Next, Segoe UI, sans-serif" font-size="56" font-weight="700" fill="#161616">Data Platform Builder</text>
+  <text x="96" y="430" font-family="Inter, Avenir Next, Segoe UI, sans-serif" font-size="28" fill="#161616">Reliable data platforms, delivery-safe analytics, and production-ready systems.</text>
+  <text x="96" y="490" font-family="Inter, Avenir Next, Segoe UI, sans-serif" font-size="26" fill="#4f4f4b">Python  Spark  SQL  dbt  SQLMesh  FastAPI  GCP</text>
+  <text x="96" y="544" font-family="Inter, Avenir Next, Segoe UI, sans-serif" font-size="22" fill="#4f4f4b">gerardo-vitale.com</text>
+</svg>

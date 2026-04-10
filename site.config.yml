@@ -2,16 +2,17 @@ person:
   name: Gerardo Vitale
   role: Data Engineer and Data Platform Builder
   location: Madrid, Spain
-  availability: Open to data engineering roles where platform reliability and business impact both matter.
+  availability: Available for freelance data platform and analytics engineering work with teams that need reliable delivery, not slideware.
   intro: >
     I design and evolve data platforms that stay dependable under production
     pressure. My work spans Python, Spark, SQL, dbt, SQLMesh, and cloud-native
-    architectures, with a bias toward reliable pipelines and high-trust
-    analytics delivery.
+    architectures, with a bias toward reliable pipelines, auditable releases,
+    and analytics teams that can move without losing trust.
   mission: >
-    I like building data systems that teams can audit, evolve, and rely on for
-    decisions. The focus is practical DataOps, resilient architecture, and
-    delivery practices that keep business-critical data products moving.
+    I help teams ship data products that are easier to reason about, safer to
+    change, and credible with the people who depend on them. The focus is
+    practical DataOps, resilient architecture, and delivery practices that
+    hold up in production.
   email: gerardo.vitale.errico@gmail.com
   brandMark: GV
   socialLinks:
@@ -28,10 +29,10 @@ person:
 seo:
   title: Gerardo Vitale | Data Engineer
   description: >
-    Portfolio for a data engineer focused on scalable data platforms, DataOps,
-    and reliable analytics delivery across energy, healthcare, e-commerce, and
-    technology domains.
-  siteUrl: https://portfolio.example.com
+    Freelance-ready portfolio for a data engineer building reliable data
+    platforms, decision-ready analytics, and production-safe delivery
+    workflows.
+  siteUrl: https://gerardo-vitale.com
 
 theme:
   fonts:
@@ -57,35 +58,37 @@ sections:
       eyebrow: Home / Hero (Data Eng)
       headline: Gerardo Vitale
       intro: >
-        I build and improve data platforms that stay readable, testable, and
-        reliable under production pressure. The work spans Python, Spark, SQL,
-        dbt, SQLMesh, and cloud-native systems that support business-critical
-        decisions.
-      missionLabel: How I work
+        I help companies build data platforms and analytics workflows that are
+        easier to trust, easier to operate, and easier to extend. The work
+        spans Python, Spark, SQL, dbt, SQLMesh, and cloud-native systems that
+        support business-critical decisions without brittle delivery paths.
+      missionLabel: What clients get
       mission: >
-        I care about data quality, release safety, and platform designs teams
-        can actually reason about. The goal is not more pipeline surface area.
-        It is dependable data products with clear operational ownership.
-      availability: Open to data engineering roles where platform reliability and business impact both matter.
+        Clear delivery ownership, production-aware engineering, and data
+        systems that stay understandable after handoff. The goal is not more
+        pipeline surface area. It is dependable data products with safer
+        release paths and fewer surprises in operations.
+      availability: Available for freelance data platform and analytics engineering engagements.
       primaryCta:
-        label: View projects
-        href: /projects
+        label: Discuss a project
+        href: mailto:gerardo.vitale.errico@gmail.com
       secondaryCta:
-        label: Read experience
-        href: /experience
+        label: View selected work
+        href: /projects
       supportNote: >
         Recent work spans EU energy markets and consulting delivery across
-        airline, healthcare, and e-commerce platforms.
+        airline, healthcare, and e-commerce platforms, with repeated focus on
+        platform reliability, lineage, and decision-ready analytics.
     stats:
-      - label: Focus
+      - label: Services
         value: Data Platforms
-        detail: From ingestion and transformation to auditable serving layers.
+        detail: From ingestion and transformation to auditable serving layers and API-ready data products.
       - label: Delivery
-        value: DataOps
-        detail: CI/CD, testing, lineage, and quality checks are part of the platform.
-      - label: Bias
-        value: Operational Clarity
-        detail: Observability, auditability, and maintainability are non-negotiable.
+        value: Production Safe
+        detail: CI/CD, testing, lineage, and quality checks are part of the platform, not afterthoughts.
+      - label: Background
+        value: Multi-Domain
+        detail: Energy, healthcare, airline, and e-commerce work under real delivery pressure.
     principlesIntro:
       eyebrow: Working principles
       title: How I expect data systems to behave
@@ -111,19 +114,19 @@ sections:
       title: Projects shaped for delivery, not just presentation.
       description: >
         The strongest work here is not only about technical output. It is about
-        clearer contracts, safer release paths, and interfaces that help users
-        decide faster.
+        clearer contracts, safer release paths, and systems that give users and
+        stakeholders better decisions with less operational friction.
     homeCard:
       eyebrow: Route 02
       title: Technical Projects
       description: Project narratives, tagged work, and delivery context.
     interaction:
       eyebrow: Interaction
-      title: Filter the portfolio by intent.
+      title: Filter the portfolio by delivery intent.
       description: >
         The interactive layer on this route is client-side only. Content stays
-        static at build time, and React is used only where state changes improve
-        exploration.
+        static at build time, and React is used only where state changes make
+        technical due diligence faster.
       searchPlaceholder: Search by title, stack, or summary
     projects:
       - slug: fuel-precision
@@ -132,7 +135,7 @@ sections:
           Live fuel price intelligence platform for Spain that turns daily
           government station data into route-aware search, trip planning, and
           regional price analysis.
-        status: live
+        status: featured
         year: "2026"
         tags:
           - Python
@@ -144,6 +147,7 @@ sections:
         highlights:
           - "Built an end-to-end data product: daily ingestion from Spain's government fuel API into Parquet on GCS, then low-latency analytical serving through DuckDB and FastAPI."
           - Shipped user-facing decision tools including best-station ranking by total trip cost, route-based fuel stop planning, and map-driven regional price exploration.
+          - Structured the application as a maintainable product rather than a demo, with delivery choices aimed at reliable refreshes and explainable results.
         links:
           - label: Live app
             href: https://fuelprecision.com
@@ -155,8 +159,9 @@ sections:
         title: Zen Python Portfolio
         summary: >
           A monochrome editorial portfolio system translated from Stitch
-          concepts into a production-grade static application.
-        status: featured
+          concepts into a production-grade static application with typed content,
+          launch-safe metadata, and lightweight interactivity.
+        status: live
         year: "2026"
         tags:
           - Astro
@@ -164,11 +169,11 @@ sections:
           - Design Systems
           - CI/CD
         highlights:
-          - Converted exploratory screens into a maintainable route structure with typed content.
-          - Designed for Raspberry Pi deployment with static output and containerized delivery.
+          - Converted exploratory screens into a maintainable route structure with typed content and schema-backed validation.
+          - Added launch hardening for canonical metadata, structured data, accessibility checks, and containerized deployment.
         links:
-          - label: View implementation plan
-            href: /home
+          - label: View live portfolio
+            href: /
             external: false
 
   - id: experience

@@ -35,6 +35,16 @@ describe("siteData", () => {
     expect(allProjectTags).toEqual([...new Set(allProjectTags)]);
   });
 
+  it("keeps current project slugs unique", () => {
+    const projectsSection = siteData.sections.find(
+      (section) => section.id === "projects",
+    );
+    const slugs =
+      projectsSection?.projects.map((project) => project.slug) ?? [];
+
+    expect(slugs).toEqual([...new Set(slugs)]);
+  });
+
   it("maps theme tokens to css variables", () => {
     expect(themeCssVariables["--color-accent"]).toBe(
       siteData.theme.palette.accent,
@@ -73,6 +83,15 @@ describe("siteData", () => {
     homeOnlyConfig.sections = homeOnlyConfig.sections.filter(
       (section) => section.id === "home",
     );
+    const homeOnlySection = homeOnlyConfig.sections.find(
+      (section) => section.id === "home",
+    );
+
+    if (!homeOnlySection || homeOnlySection.id !== "home") {
+      throw new Error("Expected home section in site config.");
+    }
+
+    homeOnlySection.hero.secondaryCta.href = "/";
 
     const parsedConfig = siteSchema.parse(homeOnlyConfig);
     const navItems = buildNavigationItems(parsedConfig.sections);
@@ -80,5 +99,80 @@ describe("siteData", () => {
 
     expect(navItems.map((item) => item.id)).toEqual(["home"]);
     expect(pageSections).toEqual([]);
+  });
+
+  it("rejects duplicate project slugs", () => {
+    const configWithDuplicateSlug = structuredClone(siteData);
+    const projectsSection = configWithDuplicateSlug.sections.find(
+      (section) => section.id === "projects",
+    );
+
+    if (!projectsSection) {
+      throw new Error("Expected projects section in site config.");
+    }
+
+    projectsSection.projects[1] = {
+      ...projectsSection.projects[1],
+      slug: projectsSection.projects[0]?.slug ?? "fuel-precision",
+    };
+
+    expect(() => siteSchema.parse(configWithDuplicateSlug)).toThrow(/slug/);
+  });
+
+  it("rejects internal project links that point to unknown routes", () => {
+    const configWithBrokenInternalLink = structuredClone(siteData);
+    const projectsSection = configWithBrokenInternalLink.sections.find(
+      (section) => section.id === "projects",
+    );
+
+    if (!projectsSection) {
+      throw new Error("Expected projects section in site config.");
+    }
+
+    projectsSection.projects[0] = {
+      ...projectsSection.projects[0],
+      links: [
+        {
+          label: "Broken route",
+          href: "/home",
+          external: false,
+        },
+      ],
+    };
+
+    expect(() => siteSchema.parse(configWithBrokenInternalLink)).toThrow(
+      /enabled portfolio route/i,
+    );
+  });
+
+  it("requires featured projects to expose at least one external proof link", () => {
+    const configWithoutProofLink = structuredClone(siteData);
+    const projectsSection = configWithoutProofLink.sections.find(
+      (section) => section.id === "projects",
+    );
+
+    if (!projectsSection) {
+      throw new Error("Expected projects section in site config.");
+    }
+
+    projectsSection.projects[0] = {
+      ...projectsSection.projects[0],
+      status: "featured",
+      links: [
+        {
+          label: "Internal only",
+          href: "/projects",
+          external: false,
+        },
+      ],
+    };
+
+    expect(() => siteSchema.parse(configWithoutProofLink)).toThrow(
+      /external proof link/i,
+    );
+  });
+
+  it("does not ship the placeholder site URL in the live config", () => {
+    expect(siteData.seo.siteUrl).toBe("https://gerardo-vitale.com");
   });
 });

@@ -103,7 +103,7 @@ export function ProjectFilters({ projects, searchPlaceholder }: Props) {
                     className="button-secondary"
                     href={link.href}
                     target={link.external ? "_blank" : undefined}
-                    rel="noreferrer"
+                    rel={link.external ? "noreferrer noopener" : undefined}
                   >
                     {link.label}
                   </a>

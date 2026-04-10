@@ -18,7 +18,7 @@ import { siteData } from "../data/site";
             <a
               href={link.href}
               target={link.external ? "_blank" : undefined}
-              rel="noreferrer"
+              rel={link.external ? "noreferrer noopener" : undefined}
             >
               {link.label}
             </a>

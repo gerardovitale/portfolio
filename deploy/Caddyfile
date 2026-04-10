@@ -1,3 +1,7 @@
+www.{$SITE_HOST} {
+  redir https://{$SITE_HOST}{uri} permanent
+}
+
 {$SITE_HOST} {
   encode zstd gzip
   tls {$SITE_EMAIL}

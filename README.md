@@ -1,4 +1,4 @@
-# Protfolio
+# Portfolio
 
 Static-first portfolio site built with Astro and React islands, driven by a single YAML config file so one codebase can be reused by different people.
 

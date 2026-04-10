@@ -149,11 +149,116 @@ const siteSectionSchema = z.discriminatedUnion("id", [
   interestsSectionSchema,
 ]);
 
+const sectionRegistry = {
+  home: {
+    id: "home",
+    route: "/",
+    required: true,
+  },
+  projects: {
+    id: "projects",
+    route: "/projects",
+    required: false,
+  },
+  experience: {
+    id: "experience",
+    route: "/experience",
+    required: false,
+  },
+  interests: {
+    id: "interests",
+    route: "/interests",
+    required: false,
+  },
+} as const;
+
 const hexColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3}){1,2}$/);
 const rgbaColorSchema = z
   .string()
   .regex(/^rgba?\([^)]+\)$/)
   .or(hexColorSchema);
+
+function isMailtoHref(href: string) {
+  return href.startsWith("mailto:");
+}
+
+function isAbsoluteWebHref(href: string) {
+  try {
+    const url = new URL(href);
+
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function normalizeInternalHref(href: string) {
+  const pathname = href.split(/[?#]/, 1)[0] ?? href;
+
+  if (pathname.length <= 1) {
+    return "/";
+  }
+
+  return pathname.replace(/\/+$/, "");
+}
+
+function isKnownInternalHref(href: string, enabledRoutes: Set<string>) {
+  return href.startsWith("/") && !href.startsWith("//")
+    ? enabledRoutes.has(normalizeInternalHref(href))
+    : false;
+}
+
+function validateConfiguredLink(
+  link: { href: string; external: boolean },
+  ctx: z.RefinementCtx,
+  path: Array<string | number>,
+  enabledRoutes: Set<string>,
+) {
+  if (link.external) {
+    if (!isAbsoluteWebHref(link.href)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'External links must use an absolute "http" or "https" URL.',
+        path,
+      });
+    }
+
+    return;
+  }
+
+  if (isMailtoHref(link.href)) {
+    return;
+  }
+
+  if (!isKnownInternalHref(link.href, enabledRoutes)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message:
+        "Internal links must target an enabled portfolio route or use mailto:.",
+      path,
+    });
+  }
+}
+
+function validateActionHref(
+  href: string,
+  ctx: z.RefinementCtx,
+  path: Array<string | number>,
+  enabledRoutes: Set<string>,
+) {
+  if (isMailtoHref(href)) {
+    return;
+  }
+
+  if (!isKnownInternalHref(href, enabledRoutes)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message:
+        "CTA links must target an enabled portfolio route or use mailto:.",
+      path,
+    });
+  }
+}
 
 export const siteSchema = z
   .object({
@@ -196,6 +301,13 @@ export const siteSchema = z
   })
   .superRefine((value, ctx) => {
     const seenIds = new Set<string>();
+    const seenProjectSlugs = new Set<string>();
+    const enabledRoutes = new Set(
+      value.sections
+        .filter((section) => section.id === "home" || "enabled" in section)
+        .filter((section) => section.id === "home" || section.enabled)
+        .map((section) => sectionRegistry[section.id].route),
+    );
 
     for (const [index, section] of value.sections.entries()) {
       if (seenIds.has(section.id)) {
@@ -207,6 +319,64 @@ export const siteSchema = z
       }
 
       seenIds.add(section.id);
+
+      if (section.id === "home") {
+        validateActionHref(
+          section.hero.primaryCta.href,
+          ctx,
+          ["sections", index, "hero", "primaryCta", "href"],
+          enabledRoutes,
+        );
+        validateActionHref(
+          section.hero.secondaryCta.href,
+          ctx,
+          ["sections", index, "hero", "secondaryCta", "href"],
+          enabledRoutes,
+        );
+      }
+
+      if (section.id === "projects") {
+        for (const [projectIndex, project] of section.projects.entries()) {
+          if (seenProjectSlugs.has(project.slug)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Duplicate project slug "${project.slug}"`,
+              path: ["sections", index, "projects", projectIndex, "slug"],
+            });
+          }
+
+          seenProjectSlugs.add(project.slug);
+
+          if (
+            project.status === "featured" &&
+            !project.links.some((link) => link.external)
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message:
+                "Featured projects must include at least one external proof link.",
+              path: ["sections", index, "projects", projectIndex, "links"],
+            });
+          }
+
+          for (const [linkIndex, link] of project.links.entries()) {
+            validateConfiguredLink(
+              link,
+              ctx,
+              [
+                "sections",
+                index,
+                "projects",
+                projectIndex,
+                "links",
+                linkIndex,
+                "href",
+              ],
+              enabledRoutes,
+            );
+          }
+        }
+      }
     }
 
     if (!seenIds.has("home")) {
@@ -216,30 +386,16 @@ export const siteSchema = z
         path: ["sections"],
       });
     }
-  });
 
-const sectionRegistry = {
-  home: {
-    id: "home",
-    route: "/",
-    required: true,
-  },
-  projects: {
-    id: "projects",
-    route: "/projects",
-    required: false,
-  },
-  experience: {
-    id: "experience",
-    route: "/experience",
-    required: false,
-  },
-  interests: {
-    id: "interests",
-    route: "/interests",
-    required: false,
-  },
-} as const;
+    for (const [index, link] of value.person.socialLinks.entries()) {
+      validateConfiguredLink(
+        link,
+        ctx,
+        ["person", "socialLinks", index, "href"],
+        enabledRoutes,
+      );
+    }
+  });
 
 const siteConfigPath = resolve(process.cwd(), "site.config.yml");
 
