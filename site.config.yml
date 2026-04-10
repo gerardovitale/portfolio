@@ -209,8 +209,8 @@ sections:
           - Improves scalability, resilience, and day-to-day operability across core platform infrastructure and integrations.
           - Contributes to an in-house end-to-end lineage solution for row-level traceability, debugging, auditing, and quality investigations.
       - company: Thoughtworks
-        role: Data Engineer
-        period: Mar 2023 - Dec 2025
+        role: Consultant Data Engineer
+        period: Mar 2022 - Dec 2025
         location: Madrid, Spain
         summary: >
           Delivered data platform and DataOps work across airline, healthcare,
@@ -219,18 +219,8 @@ sections:
         achievements:
           - Modernized a data serving platform with SQLMesh, Snowflake, AWS Glue, and SYNQ to enable scalable and auditable workflows.
           - Built a Microsoft Fabric platform PoC with PySpark, Delta, Power BI, Purview, and automated testing backed by Great Expectations.
-          - Improved pipeline performance, metrics reliability, and stakeholder alignment for a leading e-commerce platform.
-      - company: Europe's Leading e-Commerce
-        role: Junior Data Engineer
-        period: Mar 2022 - Mar 2023
-        location: Germany
-        summary: >
-          Helped build a new data platform and business-facing data products for
-          operational monitoring and decision support.
-        achievements:
-          - Designed ELT pipelines from transactional and event-driven systems with Kubernetes-backed CI/CD for dependable releases.
-          - Implemented data quality and observability with PyDeequ, LightStep, and Grafana to keep metrics trustworthy.
-          - Added unit and integration testing and ran demos that kept stakeholders aligned on delivery progress.
+          - Improved pipeline performance, metrics reliability, and stakeholder alignment for a leading e-commerce data platform built on Databricks.
+          - Implemented ELT pipelines from transactional and event-driven systems on Databricks, with PyDeequ, LightStep, and Grafana to strengthen data quality and observability.
       - company: Telefonica
         role: Junior Backend Developer
         period: Sep 2021 - Feb 2022
