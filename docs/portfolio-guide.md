@@ -419,7 +419,7 @@ Prepare the Raspberry Pi once:
 4. copy `deploy/.env.pi.example` to `/opt/portfolio/.env`
 5. edit `/opt/portfolio/.env` with the production values
 6. create a Cloudflare named tunnel and a hostname for `gerardo-vitale.com`
-7. point that hostname at the local service `http://portfolio:8080`
+7. point that hostname at the local service `http://portfolio:8081`
 8. start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`
 
 The Pi runtime env file should contain:

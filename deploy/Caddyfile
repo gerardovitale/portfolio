@@ -12,5 +12,5 @@ www.{$SITE_HOST} {
     Referrer-Policy "strict-origin-when-cross-origin"
   }
 
-  reverse_proxy portfolio:8080
+  reverse_proxy portfolio:8081
 }

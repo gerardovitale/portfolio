@@ -123,7 +123,7 @@ Pi bootstrap:
 1. Create a deployment directory, for example `/opt/portfolio`.
 2. Copy `deploy/docker-compose.pi.yml` and `deploy/.env.pi.example` into that directory.
 3. Rename `deploy/.env.pi.example` to `.env` and set the real values.
-4. In Cloudflare Zero Trust, create a named tunnel and set a public hostname for `gerardo-vitale.com` targeting `http://portfolio:8080`.
+4. In Cloudflare Zero Trust, create a named tunnel and set a public hostname for `gerardo-vitale.com` targeting `http://portfolio:8081`.
 5. Put the generated tunnel token into `.env` as `CLOUDFLARE_TUNNEL_TOKEN`.
 6. Start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`.
 

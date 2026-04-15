@@ -4,7 +4,7 @@ services:
     container_name: portfolio
     restart: unless-stopped
     expose:
-      - "8080"
+      - "8081"
     labels:
       com.centurylinklabs.watchtower.enable: "true"
     logging:
