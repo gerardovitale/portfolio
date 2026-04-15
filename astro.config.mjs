@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import { parse } from "yaml";
 
 function getConfiguredSiteUrl() {
-  const configUrl = new URL("./site.config.yml", import.meta.url);
+  const configUrl = new URL("./site.config.en.yml", import.meta.url);
   const rawConfig = readFileSync(configUrl, "utf8");
   const parsedConfig = parse(rawConfig);
   const envSiteUrl = process.env.PUBLIC_SITE_URL?.trim();

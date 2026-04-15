@@ -1,14 +1,20 @@
 import {
-  allProjectTags,
   buildNavigationItems,
   getEnabledPageSections,
-  homeSection,
-  navigationItems,
+  getSiteContext,
+  getSiteData,
+  getThemeCssVariables,
   projectStatuses,
   siteSchema,
-  siteData,
-  themeCssVariables,
 } from "./site";
+
+const englishSiteContext = getSiteContext("en");
+const spanishSiteContext = getSiteContext("es");
+const siteData = englishSiteContext.siteData;
+const homeSection = englishSiteContext.homeSection;
+const navigationItems = englishSiteContext.navigationItems;
+const allProjectTags = englishSiteContext.allProjectTags;
+const themeCssVariables = getThemeCssVariables(siteData);
 
 describe("siteData", () => {
   it("keeps route content structurally valid", () => {
@@ -174,5 +180,15 @@ describe("siteData", () => {
 
   it("does not ship the placeholder site URL in the live config", () => {
     expect(siteData.seo.siteUrl).toBe("https://gerardo-vitale.com");
+  });
+
+  it("loads localized Spanish content and hrefs", () => {
+    expect(getSiteData("es").seo.title).toContain("Ingeniero de Datos");
+    expect(spanishSiteContext.navigationItems[0]?.href).toBe("/es");
+    expect(
+      spanishSiteContext.navigationItems.some(
+        (item) => item.href === "/es/projects" && item.label === "Proyectos",
+      ),
+    ).toBe(true);
   });
 });

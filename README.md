@@ -1,12 +1,12 @@
 # Portfolio
 
-Static-first portfolio site built with Astro and React islands, driven by a single YAML config file so one codebase can be reused by different people.
+Static-first portfolio site built with Astro and React islands, driven by locale-specific YAML config files so one codebase can publish both English and Spanish variants.
 
 ## Quick Start
 
 1. Install dependencies with `npm install`.
-2. Copy [site.config.example.yml](./site.config.example.yml) to `site.config.yml`.
-3. Replace the example content in `site.config.yml` with your own profile, sections, and theme.
+2. Edit `site.config.en.yml` for the default English site content.
+3. Edit `site.config.es.yml` for the Spanish localized content.
 4. Run `npm run dev` and check the site locally.
 5. Run `npm run check` before opening a PR or deploying.
 
@@ -26,7 +26,8 @@ Static-first portfolio site built with Astro and React islands, driven by a sing
 ## Routes
 
 - `/` home and profile summary
-- optional section routes are generated from `site.config.yml`
+- optional English section routes are generated from `site.config.en.yml`
+- Spanish localized routes are generated under `/es` from `site.config.es.yml`
 
 ## Development
 
@@ -35,7 +36,7 @@ npm install
 npm run dev
 ```
 
-The site reads all author-facing content from `site.config.yml`. In most cases you should not need to edit `src/` files to change text, colors, fonts, or section visibility.
+The site reads author-facing content from `site.config.en.yml` and `site.config.es.yml`. In most cases you should not need to edit `src/` files to change copy, colors, fonts, or section visibility.
 
 ## Quality Gates
 

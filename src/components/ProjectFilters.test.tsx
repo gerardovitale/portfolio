@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ProjectFilters } from "./ProjectFilters";
-import type { Project } from "../data/site";
+import type { Project, ProjectsSection } from "../data/site";
 
 const sampleProjects: Project[] = [
   {
@@ -37,14 +37,28 @@ const sampleProjects: Project[] = [
   },
 ];
 
+const statusLabels: ProjectsSection["interaction"]["statusLabels"] = {
+  all: "all",
+  featured: "featured",
+  live: "live",
+  exploration: "exploration",
+};
+
 describe("ProjectFilters", () => {
   it("filters projects by status and search text", async () => {
     const user = userEvent.setup();
 
     render(
       <ProjectFilters
+        locale="en"
         projects={sampleProjects}
+        searchLabel="Search projects"
         searchPlaceholder="Search by title, stack, or summary"
+        statusToolbarLabel="Project status filters"
+        statusLabels={statusLabels}
+        resultsPrefix="Showing"
+        resultNounSingular="project"
+        resultNounPlural="projects"
       />,
     );
 

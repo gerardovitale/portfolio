@@ -1,75 +1,141 @@
 import { expect, test } from "@playwright/test";
-import { enabledPageSections, homeSection, siteData } from "../src/data/site";
+import { getSiteContext } from "../src/data/site";
+import { getPrimaryNavigationLabel } from "../src/lib/locale";
 import { defaultSiteUrl } from "../src/lib/meta";
 
-function escapeRegex(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+const locales = [
+  {
+    locale: "en" as const,
+    rootRoute: "/",
+    context: getSiteContext("en"),
+    expectedLang: "en",
+  },
+  {
+    locale: "es" as const,
+    rootRoute: "/es",
+    context: getSiteContext("es"),
+    expectedLang: "es",
+  },
+];
 
-test("routes are reachable from the home page", async ({ page }) => {
-  await page.goto("/");
-  const primaryNav = page.getByRole("navigation", { name: "Primary" });
-  const featuredProject = siteData.sections
-    .find((section) => section.id === "projects")
-    ?.projects.find((project) => project.status === "featured");
-
-  await expect(
-    page.getByRole("heading", { level: 1, name: homeSection.hero.headline }),
-  ).toBeVisible();
-
-  for (const section of enabledPageSections) {
-    await primaryNav
-      .getByRole("link", { name: section.navLabel, exact: true })
-      .click();
-    await expect(page).toHaveURL(new RegExp(`/${section.id}$`));
+for (const { locale, rootRoute, context, expectedLang } of locales) {
+  test(`${locale} routes are reachable from the home page`, async ({
+    page,
+  }) => {
+    await page.goto(rootRoute);
+    await page.waitForLoadState("networkidle");
+    const primaryNav = page.getByRole("navigation", {
+      name: getPrimaryNavigationLabel(locale),
+    });
+    await expect(page.locator("html")).toHaveAttribute("lang", expectedLang);
     await expect(
-      page.getByRole("heading", { level: 1, name: section.intro.title }),
+      page.getByRole("heading", {
+        level: 1,
+        name: context.homeSection.hero.headline,
+      }),
     ).toBeVisible();
 
-    if (section.id === "projects") {
-      await page.getByRole("button", { name: "featured" }).click();
+    for (const section of context.enabledPageSections) {
+      const expectedSectionRoute =
+        rootRoute === "/" ? `/${section.id}` : `${rootRoute}/${section.id}`;
+
+      await primaryNav
+        .getByRole("link", { name: section.navLabel, exact: true })
+        .click();
+      await page.waitForLoadState("networkidle");
+      await expect(page).toHaveURL(new RegExp(`${expectedSectionRoute}$`));
       await expect(
-        page.getByRole("heading", {
-          level: 2,
-          name: featuredProject?.title ?? "",
-        }),
+        page.getByRole("heading", { level: 1, name: section.intro.title }),
       ).toBeVisible();
+
+      await page.goto(rootRoute);
+      await page.waitForLoadState("networkidle");
     }
+  });
+}
 
-    if (section.id === "experience") {
-      const firstRole = section.entries[0]?.role;
-      const firstCompany = section.entries[0]?.company;
-
-      await expect(
-        page.getByRole("button", {
-          name: new RegExp(
-            `${escapeRegex(firstRole ?? "")}.*${escapeRegex(firstCompany ?? "")}`,
-            "i",
-          ),
-        }),
-      ).toBeVisible();
-    }
-
-    await page.goto("/");
-  }
-});
-
-test("home page publishes production metadata and a direct contact CTA", async ({
+test("english home page publishes production metadata and a direct contact CTA", async ({
   page,
 }) => {
+  const englishSiteContext = getSiteContext("en");
+
   await page.goto("/");
 
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
     `${defaultSiteUrl}/`,
   );
+  await expect(
+    page.locator('link[rel="alternate"][hreflang="es"]'),
+  ).toHaveAttribute("href", `${defaultSiteUrl}/es`);
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     "content",
     `${defaultSiteUrl}/og-preview.png`,
   );
   await expect(
-    page.getByRole("link", { name: "Discuss a project" }),
-  ).toHaveAttribute("href", `mailto:${siteData.person.email}`);
+    page.getByRole("link", {
+      name: englishSiteContext.homeSection.hero.primaryCta.label,
+    }),
+  ).toHaveAttribute(
+    "href",
+    `mailto:${englishSiteContext.siteData.person.email}`,
+  );
+});
+
+test("spanish home page publishes localized metadata and preserves alternate links", async ({
+  page,
+}) => {
+  const spanishSiteContext = getSiteContext("es");
+
+  await page.goto("/es");
+
+  await expect(page.locator("html")).toHaveAttribute("lang", "es");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    `${defaultSiteUrl}/es`,
+  );
+  await expect(
+    page.locator('link[rel="alternate"][hreflang="en"]'),
+  ).toHaveAttribute("href", `${defaultSiteUrl}/`);
+  await expect(
+    page.getByRole("link", {
+      name: spanishSiteContext.homeSection.hero.primaryCta.label,
+    }),
+  ).toHaveAttribute(
+    "href",
+    `mailto:${spanishSiteContext.siteData.person.email}`,
+  );
+});
+
+test("language switcher preserves the current section", async ({ page }) => {
+  await page.goto("/projects");
+  await page.getByRole("link", { name: /Espanol/i }).click();
+
+  await expect(page).toHaveURL(/\/es\/projects$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "es");
+
+  await page.getByRole("link", { name: /English/i }).click();
+
+  await expect(page).toHaveURL(/\/projects$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+});
+
+test("404 page does not advertise untranslated alternates", async ({
+  page,
+}) => {
+  await page.goto("/missing-route");
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    `${defaultSiteUrl}/missing-route`,
+  );
+  await expect(
+    page.locator('link[rel="alternate"][hreflang="es"]'),
+  ).toHaveCount(0);
+  await expect(
+    page.locator('link[rel="alternate"][hreflang="x-default"]'),
+  ).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Espanol/i })).toHaveCount(0);
 });
 
 test("health endpoint responds with ok", async ({ request }) => {

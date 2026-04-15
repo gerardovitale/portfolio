@@ -1,39 +1,63 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { siteData, themeInlineStyle } from "../data/site";
+import type { NavigationItem, SiteData } from "../data/site";
+import { localizePath, type Locale } from "../lib/locale";
 import {
   buildStructuredData,
   defaultSocialImageUrl,
+  getAlternateLanguageUrls,
   getCanonicalUrl,
+  getDefaultLanguageUrl,
   makePageTitle,
 } from "../lib/meta";
+import { getThemeInlineStyle } from "../data/site";
 import "../styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
+  locale: Locale;
+  navigationItems: NavigationItem[];
   noindex?: boolean;
+  showLocaleAlternates?: boolean;
+  siteData: SiteData;
 }
 
 const {
   title,
   description = "Portfolio website for a data engineer focused on resilient systems.",
+  locale,
+  navigationItems,
   noindex = false,
+  showLocaleAlternates = false,
+  siteData,
 } = Astro.props;
-const pageTitle = makePageTitle(title);
+const pageTitle = makePageTitle(siteData, title);
 const canonical = getCanonicalUrl(Astro.url.pathname);
+const alternateLanguageUrls = showLocaleAlternates
+  ? getAlternateLanguageUrls(Astro.url.pathname)
+  : [];
+const defaultLanguageUrl = showLocaleAlternates
+  ? getDefaultLanguageUrl(Astro.url.pathname)
+  : null;
 const themeColor = siteData.theme.themeColor ?? siteData.theme.palette.accent;
 const socialImageAlt = `${siteData.person.name} portfolio preview`;
 const structuredData = buildStructuredData({
+  siteData,
   title,
   description,
   pathname: Astro.url.pathname,
 });
+const themeInlineStyle = getThemeInlineStyle(siteData);
+const openGraphLocale = locale === "es" ? "es_ES" : "en_US";
+const localeSwitcherHref = showLocaleAlternates
+  ? localizePath(Astro.url.pathname, locale === "en" ? "es" : "en")
+  : undefined;
 ---
 
 <!doctype html>
-<html lang="en" style={themeInlineStyle}>
+<html lang={locale} style={themeInlineStyle}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -44,11 +68,26 @@ const structuredData = buildStructuredData({
       content={noindex ? "noindex, nofollow" : "index, follow"}
     />
     <link rel="canonical" href={canonical} />
+    {
+      alternateLanguageUrls.map((alternate) => (
+        <link
+          rel="alternate"
+          hreflang={alternate.locale}
+          href={alternate.href}
+        />
+      ))
+    }
+    {
+      defaultLanguageUrl && (
+        <link rel="alternate" hreflang="x-default" href={defaultLanguageUrl} />
+      )
+    }
     <meta property="og:site_name" content={siteData.person.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={openGraphLocale} />
     <meta property="og:image" content={defaultSocialImageUrl} />
     <meta property="og:image:alt" content={socialImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
@@ -60,10 +99,16 @@ const structuredData = buildStructuredData({
     <script type="application/ld+json" is:inline set:html={structuredData} />
   </head>
   <body>
-    <Header currentPath={Astro.url.pathname} />
+    <Header
+      currentPath={Astro.url.pathname}
+      locale={locale}
+      localeSwitcherHref={localeSwitcherHref}
+      navigationItems={navigationItems}
+      siteData={siteData}
+    />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} siteData={siteData} />
   </body>
 </html>

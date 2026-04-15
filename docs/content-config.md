@@ -1,6 +1,6 @@
 # Portfolio Content Config
 
-Edit `site.config.yml` to change portfolio content, enabled sections, ordering, and theme.
+Edit `site.config.en.yml` and `site.config.es.yml` to change portfolio content, enabled sections, ordering, and theme for each locale.
 
 For the full end-to-end setup and reuse guide, see [docs/portfolio-guide.md](./portfolio-guide.md).
 
@@ -9,6 +9,7 @@ For the full end-to-end setup and reuse guide, see [docs/portfolio-guide.md](./p
 - `person`: shared profile details used across the header, homepage, and footer
 - `seo`: browser title, meta description, and default canonical site URL
 - `theme`: font stacks and color palette tokens
+- `ui`: shared component labels such as footer headings
 - `sections`: the section list, in navigation order
 
 ## Rules
@@ -60,4 +61,4 @@ theme:
 
 ## Validation
 
-The site validates `site.config.yml` during tests and builds. If the config shape is invalid, commands like `npm run typecheck`, `npm run build`, or `npm run check` should fail fast.
+The site validates both locale config files during tests and builds. If either config shape is invalid, commands like `npm run typecheck`, `npm run build`, or `npm run check` should fail fast.

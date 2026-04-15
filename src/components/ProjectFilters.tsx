@@ -1,12 +1,33 @@
 import { startTransition, useDeferredValue, useState } from "react";
-import type { Project } from "../data/site";
+import type { Project, ProjectsSection } from "../data/site";
+import { localizeHref, type Locale } from "../lib/locale";
 
 type Props = {
+  locale: Locale;
   projects: Project[];
+  searchLabel: string;
   searchPlaceholder: string;
+  statusToolbarLabel: string;
+  statusLabels: ProjectsSection["interaction"]["statusLabels"];
+  resultsPrefix: string;
+  resultNounSingular: string;
+  resultNounPlural: string;
 };
 
-export function ProjectFilters({ projects, searchPlaceholder }: Props) {
+const statusOrder: Array<keyof ProjectsSection["interaction"]["statusLabels"]> =
+  ["all", "featured", "live", "exploration"];
+
+export function ProjectFilters({
+  locale,
+  projects,
+  searchLabel,
+  searchPlaceholder,
+  statusToolbarLabel,
+  statusLabels,
+  resultsPrefix,
+  resultNounSingular,
+  resultNounPlural,
+}: Props) {
   const [selectedStatus, setSelectedStatus] = useState<
     "all" | Project["status"]
   >("all");
@@ -26,12 +47,15 @@ export function ProjectFilters({ projects, searchPlaceholder }: Props) {
     return statusMatch && queryMatch;
   });
 
+  const resultNoun =
+    visibleProjects.length === 1 ? resultNounSingular : resultNounPlural;
+
   return (
     <div className="filters-shell card">
       <div className="card-body stack">
         <div className="toolbar">
           <label className="search">
-            <span className="sr-only">Search projects</span>
+            <span className="sr-only">{searchLabel}</span>
             <input
               type="search"
               name="project-search"
@@ -47,9 +71,9 @@ export function ProjectFilters({ projects, searchPlaceholder }: Props) {
           <div
             className="filter-group"
             role="toolbar"
-            aria-label="Project status filters"
+            aria-label={statusToolbarLabel}
           >
-            {["all", "featured", "live", "exploration"].map((status) => (
+            {statusOrder.map((status) => (
               <button
                 key={status}
                 type="button"
@@ -64,22 +88,21 @@ export function ProjectFilters({ projects, searchPlaceholder }: Props) {
                   );
                 }}
               >
-                {status}
+                {statusLabels[status]}
               </button>
             ))}
           </div>
         </div>
 
         <p aria-live="polite" className="muted">
-          Showing {visibleProjects.length} project
-          {visibleProjects.length === 1 ? "" : "s"}.
+          {resultsPrefix} {visibleProjects.length} {resultNoun}.
         </p>
 
         <div className="grid">
           {visibleProjects.map((project) => (
             <article key={project.slug} className="project-card">
               <div className="project-meta">
-                <span className="pill">{project.status}</span>
+                <span className="pill">{statusLabels[project.status]}</span>
                 <span className="muted">{project.year}</span>
               </div>
               <h2>{project.title}</h2>
@@ -101,7 +124,7 @@ export function ProjectFilters({ projects, searchPlaceholder }: Props) {
                   <a
                     key={link.href}
                     className="button-secondary"
-                    href={link.href}
+                    href={localizeHref(link.href, locale)}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noreferrer noopener" : undefined}
                   >

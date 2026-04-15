@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { z } from "zod";
 import { parse } from "yaml";
+import { defaultLocale, localizePath, type Locale } from "../lib/locale";
 
 const siteUrlSchema = z
   .string()
@@ -74,6 +75,31 @@ const homeCardSchema = z.object({
   description: z.string().min(1),
 });
 
+const projectInteractionSchema = z.object({
+  eyebrow: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  searchLabel: z.string().min(1),
+  searchPlaceholder: z.string().min(1),
+  statusToolbarLabel: z.string().min(1),
+  statusLabels: z.object({
+    all: z.string().min(1),
+    featured: z.string().min(1),
+    live: z.string().min(1),
+    exploration: z.string().min(1),
+  }),
+  resultsPrefix: z.string().min(1),
+  resultNounSingular: z.string().min(1),
+  resultNounPlural: z.string().min(1),
+});
+
+const uiSchema = z.object({
+  footer: z.object({
+    contactHeading: z.string().min(1),
+    profilesHeading: z.string().min(1),
+  }),
+});
+
 const homeSectionSchema = z.object({
   id: z.literal("home"),
   navLabel: z.string().min(1),
@@ -105,12 +131,7 @@ const projectsSectionSchema = z.object({
   navLabel: z.string().min(1),
   intro: pageIntroSchema,
   homeCard: homeCardSchema,
-  interaction: z.object({
-    eyebrow: z.string().min(1),
-    title: z.string().min(1),
-    description: z.string().min(1),
-    searchPlaceholder: z.string().min(1),
-  }),
+  interaction: projectInteractionSchema,
   projects: z.array(projectSchema).min(1),
 });
 
@@ -297,6 +318,7 @@ export const siteSchema = z
       }),
       themeColor: hexColorSchema.optional(),
     }),
+    ui: uiSchema,
     sections: z.array(siteSectionSchema).min(1),
   })
   .superRefine((value, ctx) => {
@@ -397,14 +419,19 @@ export const siteSchema = z
     }
   });
 
-const siteConfigPath = resolve(process.cwd(), "site.config.yml");
+const siteConfigPaths: Record<Locale, string> = {
+  en: resolve(process.cwd(), "site.config.en.yml"),
+  es: resolve(process.cwd(), "site.config.es.yml"),
+};
 
-function loadRawSiteConfig() {
-  const source = readFileSync(siteConfigPath, "utf8");
+function loadRawSiteConfig(locale: Locale) {
+  const source = readFileSync(siteConfigPaths[locale], "utf8");
   const parsed = parse(source);
 
   if (!parsed || typeof parsed !== "object") {
-    throw new Error("site.config.yml must contain a YAML object at the root.");
+    throw new Error(
+      `site.config.${locale}.yml must contain a YAML object at the root.`,
+    );
   }
 
   return parsed;
@@ -425,10 +452,26 @@ export type NavigationItem = {
   href: string;
   label: string;
 };
+export type SiteContext = ReturnType<typeof buildSiteContext>;
 
-export const siteData = siteSchema.parse(loadRawSiteConfig());
+const siteDataCache = new Map<Locale, SiteData>();
+const siteContextCache = new Map<Locale, SiteContext>();
+
+export function getSiteData(locale: Locale = defaultLocale) {
+  const cachedSiteData = siteDataCache.get(locale);
+
+  if (cachedSiteData) {
+    return cachedSiteData;
+  }
+
+  const siteData = siteSchema.parse(loadRawSiteConfig(locale));
+  siteDataCache.set(locale, siteData);
+
+  return siteData;
+}
 
 function getSectionFromSite<TSectionId extends SectionId>(
+  siteData: SiteData,
   sectionId: TSectionId,
 ): Extract<SiteSection, { id: TSectionId }> {
   const section = siteData.sections.find(
@@ -447,8 +490,15 @@ function getSectionFromSite<TSectionId extends SectionId>(
   return section;
 }
 
-export function getSectionHref(sectionId: SectionId) {
+export function getBaseSectionHref(sectionId: SectionId) {
   return sectionRegistry[sectionId].route;
+}
+
+export function getSectionHref(
+  sectionId: SectionId,
+  locale: Locale = defaultLocale,
+) {
+  return localizePath(getBaseSectionHref(sectionId), locale);
 }
 
 export function isEnabledPageSection(
@@ -463,23 +513,31 @@ export function isKnownPageSectionId(
   return sectionId in sectionRegistry && sectionId !== "home";
 }
 
-export function getPageSection(sectionId: "projects"): ProjectsSection;
-export function getPageSection(sectionId: "experience"): ExperienceSection;
-export function getPageSection(sectionId: "interests"): InterestsSection;
 export function getPageSection(
+  siteData: SiteData,
+  sectionId: "projects",
+): ProjectsSection;
+export function getPageSection(
+  siteData: SiteData,
+  sectionId: "experience",
+): ExperienceSection;
+export function getPageSection(
+  siteData: SiteData,
+  sectionId: "interests",
+): InterestsSection;
+export function getPageSection(
+  siteData: SiteData,
   sectionId: PageSectionId,
 ): ProjectsSection | ExperienceSection | InterestsSection;
-export function getPageSection(sectionId: PageSectionId) {
-  const section = getSectionFromSite(sectionId);
+export function getPageSection(siteData: SiteData, sectionId: PageSectionId) {
+  const section = getSectionFromSite(siteData, sectionId);
 
   if (!isEnabledPageSection(section)) {
-    throw new Error(`Section "${sectionId}" is disabled in site.config.yml.`);
+    throw new Error(`Section "${sectionId}" is disabled in the locale config.`);
   }
 
   return section;
 }
-
-export const homeSection = getSectionFromSite("home");
 
 export function getEnabledSections(sections: SiteSection[]) {
   return sections.filter(
@@ -496,31 +554,103 @@ export function getEnabledPageSections(sections: SiteSection[]) {
 
 export function buildNavigationItems(
   sections: SiteSection[],
+  locale: Locale = defaultLocale,
 ): NavigationItem[] {
   return getEnabledSections(sections).map((section) => ({
     id: section.id,
-    href: getSectionHref(section.id),
+    href: getSectionHref(section.id, locale),
     label: section.navLabel,
   }));
 }
 
-export function buildOptionalHomeCards(sections: SiteSection[]) {
+export function buildOptionalHomeCards(
+  sections: SiteSection[],
+  locale: Locale = defaultLocale,
+) {
   return getEnabledPageSections(sections).map((section) => ({
     id: section.id,
-    href: getSectionHref(section.id),
+    href: getSectionHref(section.id, locale),
     eyebrow: section.homeCard.eyebrow,
     title: section.homeCard.title,
     description: section.homeCard.description,
   }));
 }
 
-export const enabledSections = getEnabledSections(siteData.sections);
+export function getAllProjectTags(sections: SiteSection[]) {
+  return getEnabledPageSections(sections)
+    .filter((section): section is ProjectsSection => section.id === "projects")
+    .flatMap((section) => section.projects.flatMap((project) => project.tags))
+    .filter((tag, index, tags) => tags.indexOf(tag) === index)
+    .sort();
+}
 
-export const enabledPageSections = getEnabledPageSections(siteData.sections);
+export function getThemeCssVariables(siteData: SiteData) {
+  return {
+    "--color-bg": siteData.theme.palette.background,
+    "--color-bg-strong": siteData.theme.palette.backgroundStrong,
+    "--color-surface": siteData.theme.palette.surface,
+    "--color-surface-strong": siteData.theme.palette.surfaceStrong,
+    "--color-text": siteData.theme.palette.text,
+    "--color-text-muted": siteData.theme.palette.textMuted,
+    "--color-border": siteData.theme.palette.border,
+    "--color-border-strong": siteData.theme.palette.borderStrong,
+    "--color-accent": siteData.theme.palette.accent,
+    "--color-inverse": siteData.theme.palette.inverse,
+    "--font-body": siteData.theme.fonts.body,
+    "--font-display": siteData.theme.fonts.display,
+  };
+}
 
-export const navigationItems = buildNavigationItems(siteData.sections);
+export function getThemeInlineStyle(siteData: SiteData) {
+  return Object.entries(getThemeCssVariables(siteData))
+    .map(([token, value]) => `${token}: ${value};`)
+    .join(" ");
+}
 
-export const optionalHomeCards = buildOptionalHomeCards(siteData.sections);
+function buildSiteContext(locale: Locale) {
+  const siteData = getSiteData(locale);
+  const enabledSections = getEnabledSections(siteData.sections);
+  const enabledPageSections = getEnabledPageSections(siteData.sections);
+
+  return {
+    locale,
+    siteData,
+    homeSection: getSectionFromSite(siteData, "home"),
+    enabledSections,
+    enabledPageSections,
+    navigationItems: buildNavigationItems(siteData.sections, locale),
+    optionalHomeCards: buildOptionalHomeCards(siteData.sections, locale),
+    allProjectTags: getAllProjectTags(siteData.sections),
+    fallbackPageLink: enabledPageSections[0]
+      ? {
+          href: getSectionHref(enabledPageSections[0].id, locale),
+          label: enabledPageSections[0].navLabel,
+        }
+      : null,
+    themeCssVariables: getThemeCssVariables(siteData),
+    themeInlineStyle: getThemeInlineStyle(siteData),
+  };
+}
+
+export function getSiteContext(locale: Locale = defaultLocale) {
+  const cachedSiteContext = siteContextCache.get(locale);
+
+  if (cachedSiteContext) {
+    return cachedSiteContext;
+  }
+
+  const siteContext = buildSiteContext(locale);
+  siteContextCache.set(locale, siteContext);
+
+  return siteContext;
+}
+
+export const siteData = getSiteData();
+export const homeSection = getSiteContext().homeSection;
+export const enabledSections = getSiteContext().enabledSections;
+export const enabledPageSections = getSiteContext().enabledPageSections;
+export const navigationItems = getSiteContext().navigationItems;
+export const optionalHomeCards = getSiteContext().optionalHomeCards;
 
 export const projectStatuses: Array<Project["status"]> = [
   "featured",
@@ -528,34 +658,7 @@ export const projectStatuses: Array<Project["status"]> = [
   "exploration",
 ];
 
-export const allProjectTags = enabledPageSections
-  .filter((section): section is ProjectsSection => section.id === "projects")
-  .flatMap((section) => section.projects.flatMap((project) => project.tags))
-  .filter((tag, index, tags) => tags.indexOf(tag) === index)
-  .sort();
-
-export const fallbackPageLink = enabledPageSections[0]
-  ? {
-      href: getSectionHref(enabledPageSections[0].id),
-      label: enabledPageSections[0].navLabel,
-    }
-  : null;
-
-export const themeCssVariables = {
-  "--color-bg": siteData.theme.palette.background,
-  "--color-bg-strong": siteData.theme.palette.backgroundStrong,
-  "--color-surface": siteData.theme.palette.surface,
-  "--color-surface-strong": siteData.theme.palette.surfaceStrong,
-  "--color-text": siteData.theme.palette.text,
-  "--color-text-muted": siteData.theme.palette.textMuted,
-  "--color-border": siteData.theme.palette.border,
-  "--color-border-strong": siteData.theme.palette.borderStrong,
-  "--color-accent": siteData.theme.palette.accent,
-  "--color-inverse": siteData.theme.palette.inverse,
-  "--font-body": siteData.theme.fonts.body,
-  "--font-display": siteData.theme.fonts.display,
-};
-
-export const themeInlineStyle = Object.entries(themeCssVariables)
-  .map(([token, value]) => `${token}: ${value};`)
-  .join(" ");
+export const allProjectTags = getSiteContext().allProjectTags;
+export const fallbackPageLink = getSiteContext().fallbackPageLink;
+export const themeCssVariables = getSiteContext().themeCssVariables;
+export const themeInlineStyle = getSiteContext().themeInlineStyle;

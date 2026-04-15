@@ -51,6 +51,11 @@ theme:
     inverse: "#f5f5f1"
   themeColor: "#101010"
 
+ui:
+  footer:
+    contactHeading: Contact
+    profilesHeading: Profiles
+
 sections:
   - id: home
     navLabel: Home
@@ -127,7 +132,17 @@ sections:
         The interactive layer on this route is client-side only. Content stays
         static at build time, and React is used only where state changes make
         technical due diligence faster.
+      searchLabel: Search projects
       searchPlaceholder: Search by title, stack, or summary
+      statusToolbarLabel: Project status filters
+      statusLabels:
+        all: all
+        featured: featured
+        live: live
+        exploration: exploration
+      resultsPrefix: Showing
+      resultNounSingular: project
+      resultNounPlural: projects
     projects:
       - slug: fuel-precision
         title: Fuel Precision

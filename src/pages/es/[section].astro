@@ -1,9 +1,9 @@
 ---
-import SectionPage from "../components/SectionPage.astro";
-import { getSiteContext, isKnownPageSectionId } from "../data/site";
+import SectionPage from "../../components/SectionPage.astro";
+import { getSiteContext, isKnownPageSectionId } from "../../data/site";
 
 export function getStaticPaths() {
-  return getSiteContext("en").enabledPageSections.map((section) => ({
+  return getSiteContext("es").enabledPageSections.map((section) => ({
     params: { section: section.id },
   }));
 }
@@ -15,4 +15,4 @@ if (!sectionParam || !isKnownPageSectionId(sectionParam)) {
 }
 ---
 
-<SectionPage locale="en" sectionId={sectionParam} />
+<SectionPage locale="es" sectionId={sectionParam} />

@@ -1,12 +1,17 @@
 ---
-import { fallbackPageLink } from "../data/site";
+import { getSiteContext } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const { fallbackPageLink, navigationItems, siteData } = getSiteContext("en");
 ---
 
 <BaseLayout
   title="Not Found"
   description="The requested page could not be found."
+  locale="en"
+  navigationItems={navigationItems}
   noindex={true}
+  siteData={siteData}
 >
   <section class="section">
     <div class="shell split">

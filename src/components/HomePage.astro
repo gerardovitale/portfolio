@@ -1,0 +1,112 @@
+---
+import { getSiteContext } from "../data/site";
+import { localizeHref, type Locale } from "../lib/locale";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { homeSection, navigationItems, optionalHomeCards, siteData } =
+  getSiteContext(locale);
+---
+
+<BaseLayout
+  description={homeSection.hero.intro}
+  locale={locale}
+  navigationItems={navigationItems}
+  showLocaleAlternates={true}
+  siteData={siteData}
+>
+  <section class="section">
+    <div class="shell split">
+      <div class="stack">
+        <span class="eyebrow">{homeSection.hero.eyebrow}</span>
+        <h1 class="headline">{homeSection.hero.headline}</h1>
+        <p class="subheadline">{homeSection.hero.intro}</p>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-body stack">
+            <span class="eyebrow">{homeSection.hero.missionLabel}</span>
+            <p>{homeSection.hero.mission}</p>
+            <p class="muted">{homeSection.hero.availability}</p>
+            <div class="link-row">
+              <a
+                class="button-primary"
+                href={localizeHref(homeSection.hero.primaryCta.href, locale)}
+              >
+                {homeSection.hero.primaryCta.label}
+              </a>
+              <a
+                class="button-secondary"
+                href={localizeHref(homeSection.hero.secondaryCta.href, locale)}
+              >
+                {homeSection.hero.secondaryCta.label}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="surface-note">{homeSection.hero.supportNote}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="grid grid-three">
+        {
+          homeSection.stats.map((stat) => (
+            <article class="card">
+              <div class="card-body stack">
+                <span class="eyebrow">{stat.label}</span>
+                <strong class="stat-value">{stat.value}</strong>
+                <p class="muted">{stat.detail}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split">
+      <div class="stack">
+        <span class="eyebrow">{homeSection.principlesIntro.eyebrow}</span>
+        <h2 class="section-title">{homeSection.principlesIntro.title}</h2>
+      </div>
+
+      <div class="stack">
+        {
+          homeSection.principles.map((principle) => (
+            <article class="card">
+              <div class="card-body stack">
+                <h3 class="card-title">{principle.title}</h3>
+                <p class="muted">{principle.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell grid grid-two">
+      {
+        optionalHomeCards.map((card) => (
+          <a class="card" href={card.href}>
+            <div class="card-body stack">
+              <span class="eyebrow">{card.eyebrow}</span>
+              <h2 class="card-link-title">{card.title}</h2>
+              <p class="muted">{card.description}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

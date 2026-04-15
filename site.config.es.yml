@@ -1,0 +1,336 @@
+person:
+  name: Gerardo Vitale
+  role: Ingeniero de Datos y Constructor de Plataformas de Datos
+  location: Madrid, Espana
+  availability: Disponible para colaboraciones freelance de plataformas de datos e ingenieria analitica con equipos que necesitan entrega fiable, no presentaciones vacias.
+  intro: >
+    Diseno y hago evolucionar plataformas de datos que siguen siendo fiables
+    bajo presion de produccion. Mi trabajo abarca Python, Spark, SQL, dbt,
+    SQLMesh y arquitecturas cloud-native, con un sesgo claro hacia pipelines
+    robustos, releases auditables y equipos de analitica que pueden avanzar sin
+    perder confianza en los datos.
+  mission: >
+    Ayudo a los equipos a entregar productos de datos que sean mas faciles de
+    entender, mas seguros de cambiar y mas creibles para las personas que
+    dependen de ellos. El foco esta en DataOps practico, arquitectura
+    resiliente y practicas de entrega que resisten en produccion.
+  email: gerardo.vitale.errico@gmail.com
+  brandMark: GV
+  socialLinks:
+    - label: GitHub
+      href: https://github.com/gerardovitale
+      external: true
+    - label: LinkedIn
+      href: https://www.linkedin.com/in/gerardo-vitale-errico/
+      external: true
+    - label: Email
+      href: mailto:gerardo.vitale.errico@gmail.com
+      external: false
+
+seo:
+  title: Gerardo Vitale | Ingeniero de Datos
+  description: >
+    Portfolio en espanol para un ingeniero de datos que construye plataformas
+    fiables, analitica lista para decisiones y flujos de entrega seguros para
+    produccion.
+  siteUrl: https://gerardo-vitale.com
+
+theme:
+  fonts:
+    body: '"Inter", "Avenir Next", "Segoe UI", sans-serif'
+    display: '"Inter", "Avenir Next", "Segoe UI", sans-serif'
+  palette:
+    background: "#f7f7f5"
+    backgroundStrong: "#ffffff"
+    surface: "#ededea"
+    surfaceStrong: "#e1e1dd"
+    text: "#161616"
+    textMuted: "#4f4f4b"
+    border: "rgba(22, 22, 22, 0.16)"
+    borderStrong: "rgba(22, 22, 22, 0.4)"
+    accent: "#101010"
+    inverse: "#f5f5f1"
+  themeColor: "#101010"
+
+ui:
+  footer:
+    contactHeading: Contacto
+    profilesHeading: Perfiles
+
+sections:
+  - id: home
+    navLabel: Inicio
+    hero:
+      eyebrow: Inicio / Presentacion
+      headline: Gerardo Vitale
+      intro: >
+        Ayudo a las empresas a construir plataformas de datos y flujos de
+        analitica que sean mas faciles de confiar, operar y extender. El
+        trabajo abarca Python, Spark, SQL, dbt, SQLMesh y sistemas cloud-native
+        que respaldan decisiones criticas de negocio sin rutas de entrega
+        fragiles.
+      missionLabel: Lo que obtiene el cliente
+      mission: >
+        Responsabilidad clara sobre la entrega, ingenieria pensada para
+        produccion y sistemas de datos que siguen siendo entendibles despues del
+        handoff. El objetivo no es sumar mas superficie de pipelines, sino
+        productos de datos fiables con releases mas seguros y menos sorpresas en
+        la operacion.
+      availability: Disponible para proyectos freelance de plataformas de datos e ingenieria analitica.
+      primaryCta:
+        label: Hablemos de un proyecto
+        href: mailto:gerardo.vitale.errico@gmail.com
+      secondaryCta:
+        label: Ver trabajo seleccionado
+        href: /projects
+      supportNote: >
+        El trabajo reciente abarca mercados energeticos de la UE y entrega de
+        consultoria en plataformas de aerolineas, salud y e-commerce, con foco
+        repetido en fiabilidad de plataforma, lineage y analitica lista para
+        decisiones.
+    stats:
+      - label: Servicios
+        value: Plataformas de Datos
+        detail: Desde ingestiones y transformaciones hasta capas de serving auditables y productos de datos listos para API.
+      - label: Entrega
+        value: Segura para Produccion
+        detail: CI/CD, testing, lineage y checks de calidad forman parte de la plataforma, no se agregan al final.
+      - label: Trayectoria
+        value: Multi Dominio
+        detail: Energia, salud, aerolineas y e-commerce bajo presion real de entrega.
+    principlesIntro:
+      eyebrow: Principios de trabajo
+      title: Como espero que se comporten los sistemas de datos
+    principles:
+      - title: Construir sistemas que la gente pueda razonar
+        body: >
+          Prefiero contratos de datos explicitos, lineage claro y lineas de
+          ownership que permitan depurar y auditar sin heroismos.
+      - title: Tratar la calidad de datos como comportamiento del producto
+        body: >
+          Los controles de calidad, metricas fiables y trazabilidad historica
+          forman parte del entregable, no son trabajo de limpieza para despues.
+      - title: Tratar la calidad como una capacidad de entrega
+        body: >
+          Testing, infraestructura como codigo y workflows de release repetibles
+          son lo que permite a los equipos moverse rapido sin perder control.
+
+  - id: projects
+    enabled: true
+    navLabel: Proyectos
+    intro:
+      eyebrow: Proyectos Tecnicos
+      title: Proyectos pensados para entrega, no solo para presentacion.
+      description: >
+        El mejor trabajo aqui no trata solo del resultado tecnico. Trata de
+        contratos mas claros, releases mas seguros y sistemas que dan mejores
+        decisiones a usuarios y stakeholders con menos friccion operativa.
+    homeCard:
+      eyebrow: Ruta 02
+      title: Proyectos Tecnicos
+      description: Historias de proyecto, trabajo etiquetado y contexto de entrega.
+    interaction:
+      eyebrow: Interaccion
+      title: Filtra el portfolio por intencion de entrega.
+      description: >
+        La capa interactiva de esta ruta es solo client-side. El contenido
+        sigue siendo estatico en build y React se usa solo donde los cambios de
+        estado hacen mas rapida la due diligence tecnica.
+      searchLabel: Buscar proyectos
+      searchPlaceholder: Buscar por titulo, stack o resumen
+      statusToolbarLabel: Filtros por estado del proyecto
+      statusLabels:
+        all: todos
+        featured: destacado
+        live: publicado
+        exploration: exploracion
+      resultsPrefix: Mostrando
+      resultNounSingular: proyecto
+      resultNounPlural: proyectos
+    projects:
+      - slug: fuel-precision
+        title: Fuel Precision
+        summary: >
+          Plataforma en produccion de inteligencia de precios de combustible
+          para Espana que convierte datos diarios del gobierno en busqueda por
+          ruta, planificacion de viajes y analisis regional de precios.
+        status: featured
+        year: "2026"
+        tags:
+          - Python
+          - FastAPI
+          - DuckDB
+          - GCP
+          - Data Products
+          - Geospatial
+        highlights:
+          - "Construccion de un producto de datos end to end: ingestiones diarias desde la API publica de combustible de Espana hacia Parquet en GCS y serving analitico de baja latencia con DuckDB y FastAPI."
+          - Lanzamiento de herramientas de decision para usuarios, incluyendo ranking de estaciones por coste total del trayecto, planificacion de paradas de combustible y exploracion regional con mapa.
+          - Estructuracion de la aplicacion como producto mantenible y no como demo, con decisiones de entrega orientadas a refrescos fiables y resultados explicables.
+        links:
+          - label: Aplicacion en vivo
+            href: https://fuelprecision.com
+            external: true
+          - label: Repositorio GitHub
+            href: https://github.com/gerardovitale/travel-assistant
+            external: true
+      - slug: zen-portfolio
+        title: Zen Python Portfolio
+        summary: >
+          Sistema editorial monocromatico de portfolio traducido desde conceptos
+          de Stitch a una aplicacion estatica de produccion con contenido
+          tipado, metadata segura para lanzamiento e interactividad ligera.
+        status: live
+        year: "2026"
+        tags:
+          - Astro
+          - TypeScript
+          - Design Systems
+          - CI/CD
+        highlights:
+          - Conversion de pantallas exploratorias en una estructura de rutas mantenible con contenido tipado y validacion respaldada por esquema.
+          - Refuerzo de lanzamiento para metadata canonica, datos estructurados, checks de accesibilidad y despliegue containerizado.
+        links:
+          - label: Ver portfolio en vivo
+            href: /
+            external: false
+
+  - id: experience
+    enabled: true
+    navLabel: Experiencia
+    intro:
+      eyebrow: Experiencia / CV
+      title: Experiencia en ingenieria de plataforma, entrega analitica y calidad de datos.
+      description: >
+        El trabajo reciente recorre mercados energeticos de la UE y entrega de
+        consultoria en plataformas de aerolineas, salud y e-commerce. El hilo
+        comun es hacer que sistemas complejos sean mas fiables, auditables y
+        faciles de poner en produccion.
+    homeCard:
+      eyebrow: Ruta 03
+      title: Experiencia / CV
+      description: Roles, logros y habitos operativos detras del trabajo.
+    timeline:
+      eyebrow: Trayectoria
+      title: Roles seleccionados
+      description: >
+        El trabajo se centra en modernizacion de plataformas, productos de
+        datos fiables y practicas de ingenieria que aguantan bajo operaciones
+        reales.
+    entries:
+      - company: Axpo
+        role: Data Engineer
+        period: Dic 2025 - Actualidad
+        location: Madrid, Espana
+        summary: >
+          Mantiene y evoluciona una plataforma de datos sobre Kubernetes para
+          flujos de optimizacion de activos y logistica en mercados energeticos
+          europeos.
+        achievements:
+          - Desarrolla componentes backend y de plataforma con Python, FastAPI, PostgreSQL y Airflow para servicios internos de datos.
+          - Mejora escalabilidad, resiliencia y operabilidad diaria de la infraestructura central de plataforma e integraciones.
+          - Contribuye a una solucion interna de lineage end to end para trazabilidad a nivel de fila, depuracion, auditoria e investigaciones de calidad.
+      - company: Thoughtworks
+        role: Consultant Data Engineer
+        period: Mar 2022 - Dic 2025
+        location: Madrid, Espana
+        summary: >
+          Entrego trabajo de plataforma de datos y DataOps en proyectos de
+          aerolineas, salud y e-commerce, con foco en workflows auditables y
+          productos de datos fiables.
+        achievements:
+          - Modernizacion de una plataforma de serving de datos con SQLMesh, Snowflake, AWS Glue y SYNQ para habilitar workflows escalables y auditables.
+          - Construccion de una PoC de plataforma en Microsoft Fabric con PySpark, Delta, Power BI, Purview y testing automatizado con Great Expectations.
+          - Mejora del rendimiento de pipelines, la fiabilidad de metricas y el alineamiento con stakeholders para una plataforma de datos en Databricks orientada a e-commerce.
+          - Implementacion de pipelines ELT desde sistemas transaccionales y orientados a eventos sobre Databricks, con PyDeequ, LightStep y Grafana para reforzar calidad de datos y observabilidad.
+      - company: Telefonica
+        role: Junior Backend Developer
+        period: Sep 2021 - Feb 2022
+        location: Madrid, Espana
+        summary: >
+          Desarrollo de servicios backend containerizados para TV Open Platform
+          con disciplina de ingenieria y colaboracion cross-functional.
+        achievements:
+          - Desarrollo de microservicios con TDD, principios SOLID y practicas de Clean Architecture.
+          - Entrega de un servicio consumer en Python con Kafka, integrado con SQL Server y desplegado mediante Jenkins CI/CD.
+          - Incorporacion de metricas con Prometheus y dashboards en Grafana para visibilidad en tiempo real del servicio.
+
+  - id: interests
+    enabled: true
+    navLabel: Intereses
+    intro:
+      eyebrow: Stack e Intereses
+      title: Las plataformas, practicas y problemas de datos a los que vuelvo una y otra vez.
+      description: >
+        Esta ruta reune las herramientas en las que mas confio y los patrones
+        tecnicos que mas me importan: calidad, lineage, observabilidad y
+        entrega analitica fiable.
+    homeCard:
+      eyebrow: Ruta 04
+      title: Stack e Intereses
+      description: >
+        Herramientas, preferencias tecnicas y problemas hacia los que me siento
+        naturalmente atraido.
+    skillsHeading:
+      eyebrow: Capacidades
+      title: Herramientas y preferencias operativas
+    skillGroups:
+      - title: Plataformas de Datos
+        description: >
+          Herramientas base para construir, transformar y operar plataformas de
+          datos en produccion.
+        items:
+          - Python
+          - Spark
+          - SQL
+          - dbt
+          - SQLMesh
+          - Airflow
+      - title: Cloud y Stack Analitico
+        description: >
+          Herramientas de cloud y warehouse que he usado para entregar
+          analitica gobernada y productos de datos escalables.
+        items:
+          - Snowflake
+          - AWS Glue
+          - Microsoft Fabric
+          - Delta Lake
+          - Power BI
+          - GCP
+      - title: Practica de Entrega
+        description: >
+          Las practicas de ingenieria y calidad que mantienen estables los
+          productos de datos despues de salir.
+        items:
+          - Kubernetes
+          - Terraform
+          - FastAPI
+          - PostgreSQL
+          - CI/CD
+          - Great Expectations
+          - PyDeequ
+    interestsHeading:
+      eyebrow: Intereses
+      title: Lo que sigue captando mi atencion
+    interests:
+      - title: Data lineage y auditabilidad
+        summary: >
+          Vuelvo una y otra vez a sistemas que hacen explicable el movimiento de
+          los datos, desde cambios en origen hasta decisiones de negocio aguas
+          abajo.
+      - title: Sistemas de calidad de datos de alta confianza
+        summary: >
+          Me interesan los checks, la observabilidad y las estrategias de
+          testing que hacen que las metricas sean lo bastante fiables como para
+          usarlas con confianza.
+      - title: Trabajo de plataforma con carga de dominio
+        summary: >
+          Energia, salud, e-commerce y viajes obligan a resolver tradeoffs
+          utiles entre velocidad, gobierno y claridad operativa.
+    nowHeading:
+      eyebrow: Ahora
+      title: Foco actual
+    now:
+      - Profundizando en trabajo de plataforma alrededor de lineage, resiliencia y operabilidad diaria en mercados energeticos de la UE.
+      - Buscando colaboraciones donde Python, SQL y practicas de DataOps mejoren productos de datos criticos para el negocio.
+      - Siguiendo afinando patrones cloud-native de plataforma y entrega analitica en distintos equipos y dominios.

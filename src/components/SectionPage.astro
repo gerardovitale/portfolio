@@ -1,0 +1,166 @@
+---
+import { ExperienceAccordion } from "./ExperienceAccordion";
+import PageIntro from "./PageIntro.astro";
+import { ProjectFilters } from "./ProjectFilters";
+import {
+  getPageSection,
+  getSiteContext,
+  type PageSectionId,
+} from "../data/site";
+import type { Locale } from "../lib/locale";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+interface Props {
+  locale: Locale;
+  sectionId: PageSectionId;
+}
+
+const { locale, sectionId } = Astro.props;
+const siteContext = getSiteContext(locale);
+const { allProjectTags, navigationItems, siteData } = siteContext;
+const pageSection = getPageSection(siteData, sectionId);
+const projectsSection =
+  sectionId === "projects" ? getPageSection(siteData, "projects") : null;
+const experienceSection =
+  sectionId === "experience" ? getPageSection(siteData, "experience") : null;
+const interestsSection =
+  sectionId === "interests" ? getPageSection(siteData, "interests") : null;
+---
+
+<BaseLayout
+  title={pageSection.navLabel}
+  description={pageSection.intro.description}
+  locale={locale}
+  navigationItems={navigationItems}
+  showLocaleAlternates={true}
+  siteData={siteData}
+>
+  <PageIntro
+    eyebrow={pageSection.intro.eyebrow}
+    title={pageSection.intro.title}
+    description={pageSection.intro.description}
+  />
+
+  {
+    projectsSection && (
+      <section class="section">
+        <div class="shell split">
+          <div class="stack">
+            <span class="eyebrow">{projectsSection.interaction.eyebrow}</span>
+            <h2 class="section-title">{projectsSection.interaction.title}</h2>
+            <p class="muted">{projectsSection.interaction.description}</p>
+            <div class="link-row">
+              {allProjectTags.map((tag) => (
+                <span class="pill">{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          <ProjectFilters
+            client:load
+            locale={locale}
+            projects={projectsSection.projects}
+            searchLabel={projectsSection.interaction.searchLabel}
+            searchPlaceholder={projectsSection.interaction.searchPlaceholder}
+            statusToolbarLabel={projectsSection.interaction.statusToolbarLabel}
+            statusLabels={projectsSection.interaction.statusLabels}
+            resultsPrefix={projectsSection.interaction.resultsPrefix}
+            resultNounSingular={projectsSection.interaction.resultNounSingular}
+            resultNounPlural={projectsSection.interaction.resultNounPlural}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    experienceSection && (
+      <section class="section">
+        <div class="shell split">
+          <div class="stack">
+            <span class="eyebrow">{experienceSection.timeline.eyebrow}</span>
+            <h2 class="section-title">{experienceSection.timeline.title}</h2>
+            <p class="muted">{experienceSection.timeline.description}</p>
+          </div>
+
+          <ExperienceAccordion
+            client:load
+            entries={experienceSection.entries}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    interestsSection && (
+      <>
+        <section class="section">
+          <div class="shell stack">
+            <div class="stack">
+              <span class="eyebrow">
+                {interestsSection.skillsHeading.eyebrow}
+              </span>
+              <h2 class="section-title">
+                {interestsSection.skillsHeading.title}
+              </h2>
+            </div>
+
+            <div class="grid grid-three">
+              {interestsSection.skillGroups.map((group) => (
+                <article class="card">
+                  <div class="card-body stack">
+                    <span class="eyebrow">{group.title}</span>
+                    <p class="muted">{group.description}</p>
+                    <div class="link-row">
+                      {group.items.map((item) => (
+                        <span class="pill">{item}</span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell split">
+            <div class="stack">
+              <span class="eyebrow">
+                {interestsSection.interestsHeading.eyebrow}
+              </span>
+              <h2 class="section-title">
+                {interestsSection.interestsHeading.title}
+              </h2>
+            </div>
+            <div class="stack">
+              {interestsSection.interests.map((interest) => (
+                <article class="card">
+                  <div class="card-body stack">
+                    <h3 class="card-title">{interest.title}</h3>
+                    <p class="muted">{interest.summary}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell split">
+            <div class="stack">
+              <span class="eyebrow">{interestsSection.nowHeading.eyebrow}</span>
+              <h2 class="section-title">{interestsSection.nowHeading.title}</h2>
+            </div>
+            <div class="stack">
+              {interestsSection.now.map((item) => (
+                <div class="surface-note">{item}</div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </>
+    )
+  }
+</BaseLayout>
