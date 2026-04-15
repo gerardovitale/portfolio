@@ -18,7 +18,40 @@ const locales = [
   },
 ];
 
+function getExpectedSectionRoute(rootRoute: string, sectionId: string) {
+  return rootRoute === "/" ? `/${sectionId}` : `${rootRoute}/${sectionId}`;
+}
+
 for (const { locale, rootRoute, context, expectedLang } of locales) {
+  test(`${locale} home page header exposes expected navigation links`, async ({
+    page,
+  }) => {
+    await page.goto(rootRoute);
+    await page.waitForLoadState("networkidle");
+
+    const primaryNav = page.getByRole("navigation", {
+      name: getPrimaryNavigationLabel(locale),
+    });
+    const homeLabel = context.navigationItems[0]?.label;
+    const localeSwitcherHref = locale === "en" ? "/es" : "/";
+
+    await expect(
+      primaryNav.getByRole("link", { name: homeLabel! }),
+    ).toHaveAttribute("href", rootRoute);
+
+    for (const section of context.enabledPageSections) {
+      await expect(
+        primaryNav.getByRole("link", { name: section.navLabel, exact: true }),
+      ).toHaveAttribute("href", getExpectedSectionRoute(rootRoute, section.id));
+    }
+
+    await expect(
+      primaryNav.getByRole("link", {
+        name: locale === "en" ? /Espanol/i : /English/i,
+      }),
+    ).toHaveAttribute("href", localeSwitcherHref);
+  });
+
   test(`${locale} routes are reachable from the home page`, async ({
     page,
   }) => {
@@ -36,8 +69,10 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
     ).toBeVisible();
 
     for (const section of context.enabledPageSections) {
-      const expectedSectionRoute =
-        rootRoute === "/" ? `/${section.id}` : `${rootRoute}/${section.id}`;
+      const expectedSectionRoute = getExpectedSectionRoute(
+        rootRoute,
+        section.id,
+      );
 
       await primaryNav
         .getByRole("link", { name: section.navLabel, exact: true })
@@ -50,6 +85,24 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
 
       await page.goto(rootRoute);
       await page.waitForLoadState("networkidle");
+    }
+  });
+
+  test(`${locale} section routes are reachable directly`, async ({ page }) => {
+    for (const section of context.enabledPageSections) {
+      const expectedSectionRoute = getExpectedSectionRoute(
+        rootRoute,
+        section.id,
+      );
+
+      await page.goto(expectedSectionRoute);
+      await page.waitForLoadState("networkidle");
+
+      await expect(page).toHaveURL(new RegExp(`${expectedSectionRoute}$`));
+      await expect(page.locator("html")).toHaveAttribute("lang", expectedLang);
+      await expect(
+        page.getByRole("heading", { level: 1, name: section.intro.title }),
+      ).toBeVisible();
     }
   });
 }
