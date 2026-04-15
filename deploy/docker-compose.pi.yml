@@ -15,14 +15,14 @@ services:
 
   watchtower:
     image: containrrr/watchtower:latest
-    container_name: watchtower
+    container_name: portfolio-watchtower
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_LABEL_ENABLE: "true"
-      WATCHTOWER_POLL_INTERVAL: ${WATCHTOWER_POLL_INTERVAL:-300}
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=3600
+      - DOCKER_API_VERSION=1.40
     logging:
       driver: json-file
       options:
@@ -31,7 +31,7 @@ services:
 
   cloudflared:
     image: cloudflare/cloudflared:latest
-    container_name: cloudflared
+    container_name: portfolio-cloudflared
     restart: unless-stopped
     command: tunnel run
     environment:
