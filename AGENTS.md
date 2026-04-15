@@ -42,7 +42,7 @@
 
 ## Commit & Pull Request Guidelines
 
-- Use trunk-based development: branch from `master`, keep branches short-lived, and merge small, releasable changes back quickly.
+- Use trunk-based development: branch from `main`, keep branches short-lived, and merge small, releasable changes back quickly.
 - Use short imperative commit messages, for example: `Fix active nav path normalization`.
 - Keep commits focused; separate content edits from tooling or infra changes when practical.
 - Local hooks are enforced with Husky. `pre-commit` runs the fast gate; `pre-push` runs `npm run check`.

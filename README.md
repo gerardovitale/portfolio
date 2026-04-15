@@ -76,7 +76,7 @@ docker compose up --build
 
 ## Publish to GitHub
 
-If the repository does not exist on GitHub yet, create it first and then push `master`.
+If the repository does not exist on GitHub yet, create it first and then push `main`.
 
 With GitHub CLI:
 
@@ -88,7 +88,7 @@ Or create the repository in the GitHub UI and then run:
 
 ```bash
 git remote add origin git@github.com:gerardovitale/portfolio.git
-git push -u origin master
+git push -u origin main
 ```
 
 ## Raspberry Pi Deployment
@@ -103,10 +103,11 @@ The repository includes:
 
 The intended flow is:
 
-1. Merge to `master`.
-2. GitHub Actions publishes a versioned image to Docker Hub.
-3. The Raspberry Pi runs `watchtower` and polls Docker Hub for a newer `latest` image.
-4. `cloudflared` exposes the local service through a Cloudflare Tunnel, so the Pi does not need to be publicly reachable.
+1. Merge to `main`.
+2. GitHub Actions runs the full quality gate.
+3. If CI passes, the same workflow publishes versioned images to Docker Hub.
+4. The Raspberry Pi runs `watchtower` and polls Docker Hub for a newer `latest` image.
+5. `cloudflared` exposes the local service through a Cloudflare Tunnel, so the Pi does not need to be publicly reachable.
 
 GitHub repository configuration:
 
@@ -128,7 +129,9 @@ Pi bootstrap:
 
 Operational notes:
 
-- Watchtower polls every hour by default via `WATCHTOWER_POLL_INTERVAL=3600`.
+- Watchtower polls Docker Hub every 5 minutes by default via `WATCHTOWER_POLL_INTERVAL=300`.
+- You can raise or lower that interval in the Pi `.env` file if you want a different tradeoff between rollout speed and registry polling frequency.
+- This is continuous delivery through registry polling, not an immediate remote deploy from GitHub Actions.
 - Watchtower only updates containers explicitly labeled for this stack, so it will not restart unrelated services on the Pi.
 - To force an immediate update without waiting for the next poll, run:
 

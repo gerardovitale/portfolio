@@ -375,7 +375,7 @@ Use `npm run check` before merging or deploying.
 
 ### Publish the Repository to GitHub
 
-If this local repository is not on GitHub yet, create a new public repository and push `master`.
+If this local repository is not on GitHub yet, create a new public repository and push `main`.
 
 Using GitHub CLI:
 
@@ -387,7 +387,7 @@ Using an existing empty repository:
 
 ```bash
 git remote add origin git@github.com:gerardovitale/portfolio.git
-git push -u origin master
+git push -u origin main
 ```
 
 ### GitHub Actions Release Builds
@@ -405,9 +405,9 @@ This matters because canonical URLs and sitemap entries use that value.
 
 The repository is wired for this release path:
 
-1. push or merge to `master`
+1. push or merge to `main`
 2. `CI` validates the site
-3. `Release Image` publishes `latest` and SHA-tagged images to Docker Hub
+3. the same workflow publishes `latest` and SHA-tagged images to Docker Hub after the quality job passes
 4. `watchtower` on the Pi polls Docker Hub and replaces the running container when `latest` changes
 5. `cloudflared` exposes the local container through a Cloudflare Tunnel
 
@@ -427,13 +427,16 @@ The Pi runtime env file should contain:
 ```bash
 PORTFOLIO_IMAGE=gerardovitale/portfolio:latest
 CLOUDFLARE_TUNNEL_TOKEN=replace-with-your-cloudflare-tunnel-token
+WATCHTOWER_POLL_INTERVAL=300
 ```
 
 The deploy stack now contains:
 
 - `portfolio`: the Astro site container
-- `watchtower`: polls Docker Hub every hour and updates only containers labeled for Watchtower
+- `watchtower`: polls Docker Hub every 5 minutes by default and updates only containers labeled for Watchtower
 - `cloudflared`: keeps an outbound tunnel from the Pi to Cloudflare
+
+This is continuous delivery through registry polling, not an immediate GitHub-orchestrated remote deploy. If you need near-instant rollouts, add a separate deploy step from GitHub Actions to the Pi over SSH or run a self-hosted runner on the Pi.
 
 To force an update immediately instead of waiting for the next Watchtower poll, run:
 
