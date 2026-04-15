@@ -107,6 +107,16 @@ test("spanish home page publishes localized metadata and preserves alternate lin
   );
 });
 
+test("localized pages keep public asset links at the site root", async ({
+  page,
+}) => {
+  await page.goto("/es");
+
+  await expect(
+    page.getByRole("link", { name: "CV", exact: true }),
+  ).toHaveAttribute("href", "/gerardo-vitale-cv-2026-03.pdf");
+});
+
 test("language switcher preserves the current section", async ({ page }) => {
   await page.goto("/projects");
   await page.getByRole("link", { name: /Espanol/i }).click();
@@ -127,7 +137,7 @@ test("404 page does not advertise untranslated alternates", async ({
 
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    `${defaultSiteUrl}/missing-route`,
+    `${defaultSiteUrl}/404`,
   );
   await expect(
     page.locator('link[rel="alternate"][hreflang="es"]'),

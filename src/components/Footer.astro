@@ -24,7 +24,7 @@ const { locale, siteData } = Astro.props;
         {
           siteData.person.socialLinks.map((link) => (
             <a
-              href={localizeHref(link.href, locale)}
+              href={localizeHref(link.href, locale, link.localized)}
               target={link.external ? "_blank" : undefined}
               rel={link.external ? "noreferrer noopener" : undefined}
             >

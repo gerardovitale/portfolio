@@ -124,7 +124,7 @@ export function ProjectFilters({
                   <a
                     key={link.href}
                     className="button-secondary"
-                    href={localizeHref(link.href, locale)}
+                    href={localizeHref(link.href, locale, link.localized)}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noreferrer noopener" : undefined}
                   >

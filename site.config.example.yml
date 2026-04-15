@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=./site.config.schema.json
 # Copy this file to `site.config.yml` and replace the example content.
 # Every portfolio uses the same codebase and only changes this file.
 
@@ -42,6 +43,11 @@ theme:
     inverse: "#fffaf1"
   themeColor: "#965b2f"
 
+ui:
+  footer:
+    contactHeading: Contact
+    profilesHeading: Profiles
+
 sections:
   - id: home
     navLabel: Home
@@ -85,7 +91,17 @@ sections:
       eyebrow: Interaction
       title: Filter the portfolio by intent.
       description: Supporting copy for the projects tools.
+      searchLabel: Search projects
       searchPlaceholder: Search by title, stack, or summary
+      statusToolbarLabel: Project status filters
+      statusLabels:
+        all: all
+        featured: featured
+        live: live
+        exploration: exploration
+      resultsPrefix: Showing
+      resultNounSingular: project
+      resultNounPlural: projects
     projects:
       - slug: sample-project
         title: Sample project

@@ -13,7 +13,14 @@ const sampleProjects: Project[] = [
     year: "2026",
     tags: ["Astro", "TypeScript"],
     highlights: ["Converted design concepts", "Shipped static deployment"],
-    links: [{ label: "View project", href: "/projects", external: false }],
+    links: [
+      {
+        label: "View project",
+        href: "/projects",
+        external: false,
+        localized: true,
+      },
+    ],
   },
   {
     slug: "trip-optimizer",
@@ -23,7 +30,14 @@ const sampleProjects: Project[] = [
     year: "2026",
     tags: ["Maps", "Optimization"],
     highlights: ["Balanced dense information", "Improved comparison flows"],
-    links: [{ label: "View project", href: "/projects", external: false }],
+    links: [
+      {
+        label: "View project",
+        href: "/projects",
+        external: false,
+        localized: true,
+      },
+    ],
   },
   {
     slug: "pipeline-observatory",
@@ -33,7 +47,14 @@ const sampleProjects: Project[] = [
     year: "2025",
     tags: ["Observability", "Operations"],
     highlights: ["Centered triage", "Made failure states obvious"],
-    links: [{ label: "View project", href: "/projects", external: false }],
+    links: [
+      {
+        label: "View project",
+        href: "/projects",
+        external: false,
+        localized: true,
+      },
+    ],
   },
 ];
 

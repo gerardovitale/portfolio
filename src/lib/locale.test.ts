@@ -20,6 +20,12 @@ describe("locale helpers", () => {
     expect(localizePath("/", "es")).toBe("/es");
     expect(localizePath("/projects", "es")).toBe("/es/projects");
     expect(localizePath("/es/projects", "en")).toBe("/projects");
+    expect(localizeHref("/gerardo-vitale-cv-2026-03.pdf", "es", false)).toBe(
+      "/gerardo-vitale-cv-2026-03.pdf",
+    );
+    expect(localizeHref("/gerardo-vitale-cv-2026-03.pdf", "es")).toBe(
+      "/es/gerardo-vitale-cv-2026-03.pdf",
+    );
     expect(localizeHref("mailto:test@example.com", "es")).toBe(
       "mailto:test@example.com",
     );

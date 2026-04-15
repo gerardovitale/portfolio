@@ -83,7 +83,10 @@ export function buildStructuredData({
       "@context": "https://schema.org",
       "@type": "Person",
       "@id": `${defaultSiteUrl}#person`,
-      name: siteData.person.name,
+      name: siteData.person.fullName ?? siteData.person.name,
+      alternateName: siteData.person.fullName
+        ? siteData.person.name
+        : undefined,
       jobTitle: siteData.person.role,
       description: siteData.person.intro,
       email: `mailto:${siteData.person.email}`,

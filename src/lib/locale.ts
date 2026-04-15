@@ -80,8 +80,16 @@ export function localizePath(pathname: string, locale: Locale) {
   return `${prefix}${basePath}`;
 }
 
-export function localizeHref(href: string, locale: Locale) {
+export function localizeHref(
+  href: string,
+  locale: Locale,
+  shouldLocalize = true,
+) {
   if (!href.startsWith("/") || href.startsWith("//")) {
+    return href;
+  }
+
+  if (!shouldLocalize) {
     return href;
   }
 

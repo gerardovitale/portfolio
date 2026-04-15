@@ -43,6 +43,25 @@ describe("meta helpers", () => {
     ).toBe(true);
   });
 
+  it("uses the formal full name in person structured data when configured", () => {
+    const payload = buildStructuredData({
+      siteData: englishSiteData,
+      description: englishSiteData.seo.description,
+      pathname: "/",
+    });
+    const parsed = JSON.parse(payload) as Array<{
+      "@type": string;
+      name?: string;
+      alternateName?: string;
+    }>;
+    const personEntry = parsed.find((entry) => entry["@type"] === "Person");
+
+    expect(personEntry).toMatchObject({
+      name: "Gerardo Vitale Errico",
+      alternateName: "Gerardo Vitale",
+    });
+  });
+
   it("builds locale alternates for translated routes", () => {
     expect(getAlternateLanguageUrls("/es/projects")).toEqual([
       { locale: "en", href: "https://gerardo-vitale.com/projects" },

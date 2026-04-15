@@ -19,6 +19,7 @@ const themeCssVariables = getThemeCssVariables(siteData);
 describe("siteData", () => {
   it("keeps route content structurally valid", () => {
     expect(siteData.person.name).toBeTruthy();
+    expect(siteData.person.fullName).toBe("Gerardo Vitale Errico");
     expect(homeSection.id).toBe("home");
     expect(navigationItems.some((item) => item.id === "home")).toBe(true);
     expect(siteData.sections.some((section) => section.id === "home")).toBe(
@@ -142,6 +143,7 @@ describe("siteData", () => {
           label: "Broken route",
           href: "/home",
           external: false,
+          localized: true,
         },
       ],
     };
@@ -169,6 +171,7 @@ describe("siteData", () => {
           label: "Internal only",
           href: "/projects",
           external: false,
+          localized: true,
         },
       ],
     };
@@ -183,12 +186,49 @@ describe("siteData", () => {
   });
 
   it("loads localized Spanish content and hrefs", () => {
-    expect(getSiteData("es").seo.title).toContain("Ingeniero de Datos");
+    expect(getSiteData("es").seo.title).toContain(
+      "Data Engineer & Backend Developer",
+    );
     expect(spanishSiteContext.navigationItems[0]?.href).toBe("/es");
     expect(
       spanishSiteContext.navigationItems.some(
         (item) => item.href === "/es/projects" && item.label === "Proyectos",
       ),
     ).toBe(true);
+  });
+
+  it("allows explicit non-localized links to public assets", () => {
+    const configWithAssetLink = structuredClone(siteData);
+
+    configWithAssetLink.person.socialLinks.push({
+      label: "Asset",
+      href: "/gerardo-vitale-cv-2026-03.pdf",
+      external: false,
+      localized: false,
+    });
+
+    expect(() => siteSchema.parse(configWithAssetLink)).not.toThrow();
+  });
+
+  it("rejects non-localized asset links when the public file does not exist", () => {
+    const configWithBrokenAssetLink = structuredClone(siteData);
+
+    configWithBrokenAssetLink.person.socialLinks.push({
+      label: "Broken asset",
+      href: "/gerardo-vitale-cv-2026-30.pdf",
+      external: false,
+      localized: false,
+    });
+
+    expect(() => siteSchema.parse(configWithBrokenAssetLink)).toThrow(
+      /existing file under public/i,
+    );
+  });
+
+  it("accepts an empty siteUrl to defer to PUBLIC_SITE_URL", () => {
+    const configWithEmptySiteUrl = structuredClone(siteData);
+    configWithEmptySiteUrl.seo.siteUrl = "";
+
+    expect(() => siteSchema.parse(configWithEmptySiteUrl)).not.toThrow();
   });
 });

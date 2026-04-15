@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { z } from "zod";
 import { parse } from "yaml";
@@ -14,6 +14,7 @@ const linkSchema = z.object({
   label: z.string().min(1),
   href: z.string().min(1),
   external: z.boolean().default(false),
+  localized: z.boolean().default(true),
 });
 
 const statSchema = z.object({
@@ -229,8 +230,23 @@ function isKnownInternalHref(href: string, enabledRoutes: Set<string>) {
     : false;
 }
 
+function publicAssetExists(href: string) {
+  if (!href.startsWith("/") || href.startsWith("//")) {
+    return false;
+  }
+
+  const pathname = href.split(/[?#]/, 1)[0] ?? href;
+  const publicAssetPath = resolve(
+    process.cwd(),
+    "public",
+    pathname.replace(/^\/+/, ""),
+  );
+
+  return existsSync(publicAssetPath);
+}
+
 function validateConfiguredLink(
-  link: { href: string; external: boolean },
+  link: { href: string; external: boolean; localized: boolean },
   ctx: z.RefinementCtx,
   path: Array<string | number>,
   enabledRoutes: Set<string>,
@@ -248,6 +264,19 @@ function validateConfiguredLink(
   }
 
   if (isMailtoHref(link.href)) {
+    return;
+  }
+
+  if (!link.localized) {
+    if (!publicAssetExists(link.href)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "Non-localized internal links must point to an existing file under public/.",
+        path,
+      });
+    }
+
     return;
   }
 
@@ -285,6 +314,7 @@ export const siteSchema = z
   .object({
     person: z.object({
       name: z.string().min(1),
+      fullName: z.string().min(1).optional(),
       role: z.string().min(1),
       location: z.string().min(1),
       availability: z.string().min(1),

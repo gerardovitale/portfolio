@@ -1,1 +1,37 @@
+#!/usr/bin/env sh
+set -e
+
+tmp_dir=$(mktemp -d)
+trap 'rm -rf "$tmp_dir"' EXIT INT TERM
+
+counter=0
+
+git diff --cached --name-only --diff-filter=ACMR -- "*.yml" "*.yaml" |
+  while IFS= read -r file; do
+    [ -n "$file" ] || continue
+
+    mode=$(git ls-files -s -- "$file" | awk 'NR==1 { print $1 }')
+    [ -n "$mode" ] || continue
+
+    staged_input="$tmp_dir/staged-$counter"
+    formatted_output="$tmp_dir/formatted-$counter"
+    counter=$((counter + 1))
+
+    if git diff --quiet -- "$file"; then
+      has_unstaged_changes=0
+    else
+      has_unstaged_changes=1
+    fi
+
+    git show ":$file" > "$staged_input"
+    npx prettier --stdin-filepath "$file" < "$staged_input" > "$formatted_output"
+
+    blob=$(git hash-object -w "$formatted_output")
+    git update-index --cacheinfo "$mode" "$blob" "$file"
+
+    if [ "$has_unstaged_changes" -eq 0 ]; then
+      cat "$formatted_output" > "$file"
+    fi
+  done
+
 npm run check:pre-commit
