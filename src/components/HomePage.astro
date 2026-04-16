@@ -115,9 +115,7 @@ const interestsSection = enabledPageSections.some(
       <div class="stack editorial-flow">
         {
           homeSection.principles.map((principle, index) => (
-            <article
-              class:list={["card principle-card", index === 1 && "offset-card"]}
-            >
+            <article class="card principle-card">
               <div class="card-body stack">
                 <span class="eyebrow">0{index + 1}</span>
                 <h3 class="card-title">{principle.title}</h3>

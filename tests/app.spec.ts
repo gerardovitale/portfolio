@@ -256,6 +256,35 @@ test("spanish home page publishes localized metadata and preserves alternate lin
   );
 });
 
+for (const { locale, rootRoute, context } of locales) {
+  test(`${locale} home stats and principles use a uniform card treatment`, async ({
+    page,
+  }) => {
+    await page.goto(rootRoute);
+    await page.waitForLoadState("networkidle");
+
+    const principleCards = page.locator(".principle-card");
+    const statCards = page.locator(".stat-card");
+
+    await expect(principleCards).toHaveCount(
+      context.homeSection.principles.length,
+    );
+    await expect(statCards).toHaveCount(context.homeSection.stats.length);
+
+    const principleLeftOffsets = await principleCards.evaluateAll((elements) =>
+      elements.map((element) => element.getBoundingClientRect().left),
+    );
+    const statBackgrounds = await statCards.evaluateAll((elements) =>
+      elements.map(
+        (element) => window.getComputedStyle(element).backgroundColor,
+      ),
+    );
+
+    expect(new Set(principleLeftOffsets).size).toBe(1);
+    expect(new Set(statBackgrounds).size).toBe(1);
+  });
+}
+
 test("localized pages keep public asset links at the site root", async ({
   page,
   request,
