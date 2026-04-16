@@ -1,0 +1,34 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  role="img"
+  aria-labelledby="faviconTitle"
+>
+  <title id="faviconTitle">GV favicon</title>
+  <rect width="64" height="64" rx="10" fill="#f5f5f1" />
+  <rect
+    x="7.5"
+    y="7.5"
+    width="49"
+    height="49"
+    rx="8"
+    fill="none"
+    stroke="#161616"
+    stroke-width="1.5"
+  />
+  <text
+    x="50%"
+    y="52%"
+    fill="#101010"
+    font-family="Inter, Avenir Next, Segoe UI, sans-serif"
+    font-size="24"
+    font-weight="700"
+    letter-spacing="2"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >
+    GV
+  </text>
+</svg>

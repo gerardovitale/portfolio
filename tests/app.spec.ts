@@ -179,6 +179,21 @@ test("english home page publishes production metadata and a direct contact CTA",
     `${defaultSiteUrl}/og-preview.png`,
   );
   await expect(
+    page.locator('link[rel="icon"][type="image/svg+xml"]'),
+  ).toHaveAttribute("href", "/favicon.svg");
+  await expect(page.locator('link[rel="icon"][sizes="32x32"]')).toHaveAttribute(
+    "href",
+    "/favicon-32x32.png",
+  );
+  await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute(
+    "href",
+    "/apple-touch-icon.png",
+  );
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
+    "href",
+    "/site.webmanifest",
+  );
+  await expect(
     page.getByRole("link", {
       name: englishSiteContext.homeSection.hero.primaryCta.label,
     }),
@@ -201,6 +216,9 @@ test("spanish home page publishes localized metadata and preserves alternate lin
     `${defaultSiteUrl}/es`,
   );
   await expect(
+    page.locator('link[rel="icon"][type="image/svg+xml"]'),
+  ).toHaveAttribute("href", "/favicon.svg");
+  await expect(
     page.locator('link[rel="alternate"][hreflang="en"]'),
   ).toHaveAttribute("href", `${defaultSiteUrl}/`);
   await expect(
@@ -215,12 +233,38 @@ test("spanish home page publishes localized metadata and preserves alternate lin
 
 test("localized pages keep public asset links at the site root", async ({
   page,
+  request,
 }) => {
+  const englishSiteContext = getSiteContext("en");
+
   await page.goto("/es");
 
   await expect(
     page.getByRole("link", { name: "CV", exact: true }),
   ).toHaveAttribute("href", "/gerardo-vitale-cv-2026-03.pdf");
+
+  const faviconResponse = await request.get("/favicon.svg");
+  expect(faviconResponse.ok()).toBeTruthy();
+  expect(faviconResponse.headers()["content-type"]).toContain("image/svg+xml");
+
+  const manifestResponse = await request.get("/site.webmanifest");
+  expect(manifestResponse.ok()).toBeTruthy();
+  expect(manifestResponse.headers()["content-type"]).toContain(
+    "application/manifest+json",
+  );
+  const manifest = (await manifestResponse.json()) as {
+    name: string;
+    short_name: string;
+    theme_color: string;
+  };
+
+  expect(manifest).toMatchObject({
+    name: englishSiteContext.siteData.person.name,
+    short_name: englishSiteContext.siteData.person.brandMark,
+    theme_color:
+      englishSiteContext.siteData.theme.themeColor ??
+      englishSiteContext.siteData.theme.palette.accent,
+  });
 });
 
 test("language switcher preserves the current section", async ({ page }) => {
