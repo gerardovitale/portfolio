@@ -30,7 +30,7 @@ export function getLocalePrefix(locale: Locale) {
 }
 
 export function getLocaleName(locale: Locale) {
-  return locale === "en" ? "English" : "Espanol";
+  return locale === "en" ? "English" : "Español";
 }
 
 export function getLocaleCode(locale: Locale) {
@@ -46,7 +46,7 @@ export function getLanguageSwitcherLabel(locale: Locale) {
 }
 
 export function getPrimaryNavigationLabel(locale: Locale) {
-  return locale === "en" ? "Primary navigation" : "Navegacion principal";
+  return locale === "en" ? "Primary navigation" : "Navegación principal";
 }
 
 export function getLocaleInfoFromPathname(pathname: string) {

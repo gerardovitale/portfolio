@@ -47,7 +47,7 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
 
     await expect(
       primaryNav.getByRole("link", {
-        name: locale === "en" ? /Espanol/i : /English/i,
+        name: locale === "en" ? /Español/i : /English/i,
       }),
     ).toHaveAttribute("href", localeSwitcherHref);
   });
@@ -172,7 +172,7 @@ test("localized pages keep public asset links at the site root", async ({
 
 test("language switcher preserves the current section", async ({ page }) => {
   await page.goto("/projects");
-  await page.getByRole("link", { name: /Espanol/i }).click();
+  await page.getByRole("link", { name: /Español/i }).click();
 
   await expect(page).toHaveURL(/\/es\/projects$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
@@ -198,7 +198,7 @@ test("404 page does not advertise untranslated alternates", async ({
   await expect(
     page.locator('link[rel="alternate"][hreflang="x-default"]'),
   ).toHaveCount(0);
-  await expect(page.getByRole("link", { name: /Espanol/i })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Español/i })).toHaveCount(0);
 });
 
 test("health endpoint responds with ok", async ({ request }) => {

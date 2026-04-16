@@ -1,4 +1,6 @@
 import {
+  getLocaleName,
+  getPrimaryNavigationLabel,
   getLocaleInfoFromPathname,
   localizeHref,
   localizePath,
@@ -32,5 +34,10 @@ describe("locale helpers", () => {
     expect(localizeHref("https://example.com", "es")).toBe(
       "https://example.com",
     );
+  });
+
+  it("returns the expected visible locale labels", () => {
+    expect(getLocaleName("es")).toBe("Español");
+    expect(getPrimaryNavigationLabel("es")).toBe("Navegación principal");
   });
 });
