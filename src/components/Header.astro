@@ -6,6 +6,7 @@ import {
   getLocaleCode,
   getLanguageSwitcherLabel,
   getLocaleName,
+  localizePath,
   getOpenNavigationMenuLabel,
   getPrimaryNavigationLabel,
   type Locale,
@@ -35,6 +36,7 @@ const openNavigationMenuLabel = getOpenNavigationMenuLabel(locale);
 const closeNavigationMenuLabel = getCloseNavigationMenuLabel(locale);
 const menuToggleId = `primary-navigation-toggle-${locale}`;
 const mobileNavId = `primary-navigation-${locale}`;
+const localizedHomePath = localizePath("/", locale);
 ---
 
 <header class="header">
@@ -71,6 +73,8 @@ const mobileNavId = `primary-navigation-${locale}`;
       class="primary-nav"
       aria-label={navigationLabel}
       data-mobile-nav
+      data-current-path={normalizedCurrentPath}
+      data-home-path={normalizePath(localizedHomePath)}
     >
       <ul class="nav-list">
         {
@@ -78,13 +82,9 @@ const mobileNavId = `primary-navigation-${locale}`;
             <li>
               <a
                 href={item.href}
-                class:list={[
-                  "nav-link",
-                  normalizedCurrentPath === item.href && "is-active",
-                ]}
-                aria-current={
-                  normalizedCurrentPath === item.href ? "page" : undefined
-                }
+                data-section-link
+                data-section-id={item.id}
+                class="nav-link"
               >
                 {item.label}
               </a>
@@ -97,6 +97,8 @@ const mobileNavId = `primary-navigation-${locale}`;
               <a
                 class="locale-link"
                 href={localeSwitcherHref}
+                data-locale-switcher
+                data-base-href={localeSwitcherHref}
                 aria-label={`${localeSwitcherLabel}: ${getLocaleName(alternateLocale)}`}
               >
                 {getLocaleCode(alternateLocale)}
@@ -112,6 +114,10 @@ const mobileNavId = `primary-navigation-${locale}`;
 <script is:inline>
   const menuToggle = document.querySelector("[data-mobile-nav-toggle]");
   const primaryNav = document.querySelector("[data-mobile-nav]");
+  const sectionLinks = Array.from(
+    document.querySelectorAll("[data-section-link]"),
+  );
+  const localeSwitcher = document.querySelector("[data-locale-switcher]");
 
   if (
     menuToggle instanceof HTMLButtonElement &&
@@ -167,6 +173,69 @@ const mobileNavId = `primary-navigation-${locale}`;
 
     desktopMediaQuery.addEventListener("change", syncNavigationVisibility);
     syncNavigationVisibility();
+
+    sectionLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        if (!desktopMediaQuery.matches) {
+          setExpanded(false);
+        }
+      });
+    });
+  }
+
+  if (sectionLinks.length > 0) {
+    const currentPath = primaryNav?.dataset.currentPath ?? "";
+    const homePath = primaryNav?.dataset.homePath ?? "";
+
+    const getActiveSectionId = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+
+      if (hash) {
+        return hash;
+      }
+
+      return currentPath === homePath ? "home" : null;
+    };
+
+    const syncSectionLinks = () => {
+      const activeSectionId = getActiveSectionId();
+
+      sectionLinks.forEach((link) => {
+        if (!(link instanceof HTMLAnchorElement)) {
+          return;
+        }
+
+        const isActive = link.dataset.sectionId === activeSectionId;
+        link.classList.toggle("is-active", isActive);
+
+        if (isActive) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    window.addEventListener("hashchange", syncSectionLinks);
+    syncSectionLinks();
+  }
+
+  if (localeSwitcher instanceof HTMLAnchorElement) {
+    const syncLocaleSwitcherHref = () => {
+      const hash = window.location.hash;
+      const baseHref =
+        localeSwitcher.dataset.baseHref ??
+        localeSwitcher.getAttribute("href") ??
+        localeSwitcher.href;
+
+      localeSwitcher.setAttribute(
+        "href",
+        hash ? `${baseHref}${hash}` : baseHref,
+      );
+    };
+
+    window.addEventListener("hashchange", syncLocaleSwitcherHref);
+    syncLocaleSwitcherHref();
   }
 </script>
 
@@ -174,10 +243,10 @@ const mobileNavId = `primary-navigation-${locale}`;
   .header {
     position: sticky;
     top: 0;
-    z-index: 10;
-    backdrop-filter: blur(18px);
+    z-index: 20;
+    backdrop-filter: blur(22px);
     border-bottom: var(--line);
-    background: var(--color-bg);
+    background: color-mix(in srgb, var(--color-bg) 82%, transparent);
   }
 
   .header-inner {
@@ -201,8 +270,8 @@ const mobileNavId = `primary-navigation-${locale}`;
     width: 2.5rem;
     height: 2.5rem;
     border: var(--line);
-    background: var(--color-bg-strong);
-    letter-spacing: 0.08em;
+    background: var(--color-surface);
+    letter-spacing: 0.14em;
     font-size: 0.8rem;
   }
 
@@ -216,7 +285,8 @@ const mobileNavId = `primary-navigation-${locale}`;
   .brand-copy strong {
     font-family: var(--font-display);
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   .brand-copy span {
@@ -292,36 +362,38 @@ const mobileNavId = `primary-navigation-${locale}`;
     align-items: center;
     justify-content: center;
     padding: 0.7rem 0.9rem;
-    border: var(--line);
+    border: 1px solid transparent;
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.73rem;
-    background: var(--color-bg-strong);
+    letter-spacing: 0.13em;
+    font-size: 0.7rem;
+    background: transparent;
     transition:
       border-color var(--transition-fast),
       background-color var(--transition-fast),
+      color var(--transition-fast),
       transform var(--transition-fast);
   }
 
   .nav-link {
     width: 100%;
     justify-content: flex-start;
+    color: var(--color-text-muted);
   }
 
   .nav-link:hover,
   .locale-link:hover {
     transform: translateY(-1px);
     border-color: var(--color-border-strong);
+    color: var(--color-text);
   }
 
   .locale-link {
     width: 2.6rem;
     min-width: 2.6rem;
     padding: 0;
-    border-radius: 999px;
     background: var(--color-surface);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     font-weight: 700;
   }
 

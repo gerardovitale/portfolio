@@ -1,6 +1,7 @@
 import { startTransition, useDeferredValue, useState } from "react";
 import type { Project, ProjectsSection } from "../data/site";
-import { localizeHref, type Locale } from "../lib/locale";
+import type { Locale } from "../lib/locale";
+import { localizeContentHref } from "../lib/routing";
 
 type Props = {
   locale: Locale;
@@ -124,7 +125,11 @@ export function ProjectFilters({
                   <a
                     key={link.href}
                     className="button-secondary"
-                    href={localizeHref(link.href, locale, link.localized)}
+                    href={localizeContentHref(
+                      link.href,
+                      locale,
+                      link.localized,
+                    )}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noreferrer noopener" : undefined}
                   >

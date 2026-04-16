@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { z } from "zod";
 import { parse } from "yaml";
 import { defaultLocale, localizePath, type Locale } from "../lib/locale";
+import { getLocalizedSectionHref } from "../lib/routing";
 
 const siteUrlSchema = z
   .string()
@@ -588,7 +589,7 @@ export function buildNavigationItems(
 ): NavigationItem[] {
   return getEnabledSections(sections).map((section) => ({
     id: section.id,
-    href: getSectionHref(section.id, locale),
+    href: getLocalizedSectionHref(section.id, locale),
     label: section.navLabel,
   }));
 }
@@ -599,7 +600,7 @@ export function buildOptionalHomeCards(
 ) {
   return getEnabledPageSections(sections).map((section) => ({
     id: section.id,
-    href: getSectionHref(section.id, locale),
+    href: getLocalizedSectionHref(section.id, locale),
     eyebrow: section.homeCard.eyebrow,
     title: section.homeCard.title,
     description: section.homeCard.description,
@@ -653,7 +654,7 @@ function buildSiteContext(locale: Locale) {
     allProjectTags: getAllProjectTags(siteData.sections),
     fallbackPageLink: enabledPageSections[0]
       ? {
-          href: getSectionHref(enabledPageSections[0].id, locale),
+          href: getLocalizedSectionHref(enabledPageSections[0].id, locale),
           label: enabledPageSections[0].navLabel,
         }
       : null,

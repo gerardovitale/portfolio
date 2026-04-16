@@ -25,9 +25,9 @@ Static-first portfolio site built with Astro and React islands, driven by locale
 
 ## Routes
 
-- `/` home and profile summary
-- optional English section routes are generated from `site.config.en.yml`
-- Spanish localized routes are generated under `/es` from `site.config.es.yml`
+- `/` English single-page portfolio with anchored sections
+- `/es` Spanish single-page portfolio with anchored sections
+- legacy section URLs such as `/projects` and `/es/projects` redirect to their matching in-page anchors
 
 ## Development
 
@@ -134,7 +134,7 @@ Operational notes:
 - You can raise or lower that interval in the Pi `.env` file if you want a different tradeoff between rollout speed and registry polling frequency.
 - This is continuous delivery through registry polling, not an immediate remote deploy from GitHub Actions.
 - Watchtower only updates containers explicitly labeled for this stack, so it will not restart unrelated services on the Pi.
-- After each deploy, verify the public hostname returns `200` for `/`, `/projects`, `/experience`, `/interests`, `/es`, and `/es/projects`, and confirm no `Location` header exposes `:8081`.
+- After each deploy, verify the public hostname returns `200` for `/` and `/es`, `301` redirects for legacy section URLs like `/projects` and `/es/projects`, and confirm no `Location` header exposes `:8081`.
 - If only one desktop browser is broken while mobile and other clients work, clear that browser's cached site data, redirect state, and DNS/HSTS state before changing the server.
 - To force an immediate update without waiting for the next poll, run:
 

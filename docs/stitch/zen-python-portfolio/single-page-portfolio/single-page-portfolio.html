@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SYSTEM_ARCHITECT | Aris Thompson</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#474747",
+                        "on-tertiary-fixed-variant": "#e2e2e2",
+                        "error": "#ba1a1a",
+                        "tertiary": "#3a3c3c",
+                        "on-tertiary-fixed": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "background": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#410002",
+                        "on-tertiary": "#e2e2e2",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#454747",
+                        "tertiary-fixed": "#5d5f5f",
+                        "surface": "#f9f9f9",
+                        "on-primary": "#e2e2e2",
+                        "inverse-primary": "#c6c6c6",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#d5d4d4",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#3b3b3c",
+                        "on-primary-container": "#ffffff",
+                        "secondary": "#5e5e5e",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-fixed-dim": "#acabab",
+                        "on-tertiary-container": "#ffffff",
+                        "on-error": "#ffffff",
+                        "outline": "#777777",
+                        "inverse-surface": "#2f3131",
+                        "surface-dim": "#dadada",
+                        "surface-tint": "#5e5e5e",
+                        "on-primary-fixed": "#ffffff",
+                        "surface-container-high": "#e8e8e8",
+                        "on-surface": "#1a1c1c",
+                        "outline-variant": "#c6c6c6",
+                        "on-primary-fixed-variant": "#e2e2e2",
+                        "primary": "#000000",
+                        "on-secondary-container": "#1b1c1c",
+                        "primary-fixed": "#5e5e5e",
+                        "primary-fixed-dim": "#474747",
+                        "tertiary-container": "#737575",
+                        "surface-container-low": "#f3f3f3",
+                        "secondary-fixed": "#c7c6c6",
+                        "surface-container": "#eeeeee",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-container": "#3b3b3b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .hairline-border { border: 1px solid #c6c6c6; }
+        .tonal-stack-1 { background-color: #f9f9f9; }
+        .tonal-stack-2 { background-color: #eeeeee; }
+        .tonal-stack-3 { background-color: #ffffff; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f9]/80 backdrop-blur-md border-b border-gray-300/20">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-black" style="font-variation-settings: 'FILL' 0;">terminal</span>
+<span class="text-xl font-black tracking-[-0.02em] text-black">SYSTEM_ARCHITECT</span>
+</div>
+<nav class="hidden md:flex gap-8">
+<a class="font-['Inter'] tracking-tight text-sm uppercase font-bold text-gray-500 hover:text-black transition-colors duration-300 cursor-pointer active:opacity-70" href="#work">WORK</a>
+<a class="font-['Inter'] tracking-tight text-sm uppercase font-bold text-gray-500 hover:text-black transition-colors duration-300 cursor-pointer active:opacity-70" href="#experience">EXPERIENCE</a>
+<a class="font-['Inter'] tracking-tight text-sm uppercase font-bold text-gray-500 hover:text-black transition-colors duration-300 cursor-pointer active:opacity-70" href="#stack">STACK</a>
+</nav>
+<div class="cursor-pointer active:opacity-70">
+<span class="font-['Inter'] tracking-tight text-sm uppercase font-bold text-black border-b border-black">CONTACT</span>
+</div>
+</div>
+</header>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="px-8 py-24 md:py-48 flex flex-col items-start max-w-7xl mx-auto">
+<label class="text-[10px] tracking-[0.2em] uppercase text-outline mb-4">ENGINEERING PRECISON</label>
+<h1 class="text-6xl md:text-9xl font-black tracking-tight leading-[1] mb-8 text-primary">
+                Aris Thompson.<br/>
+<span class="text-outline">Data Architect.</span>
+</h1>
+<div class="grid grid-cols-1 md:grid-cols-12 w-full gap-8">
+<div class="md:col-span-7">
+<p class="text-xl md:text-2xl leading-relaxed text-on-surface-variant max-w-2xl">
+                        Constructing silent, high-concurrency nervous systems for global data flows. Specializing in the architecture of resilience and the geometry of distributed systems.
+                    </p>
+</div>
+<div class="md:col-span-5 flex flex-col justify-end">
+<div class="hairline-border p-6 aspect-square flex flex-col justify-between">
+<span class="material-symbols-outlined text-4xl">architecture</span>
+<div class="text-sm font-bold uppercase tracking-widest">Scalability is not an option. It is a mathematical certainty.</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Experience Timeline -->
+<section class="bg-surface-container py-32 px-8" id="experience">
+<div class="max-w-7xl mx-auto">
+<h2 class="text-sm font-bold tracking-[0.3em] uppercase mb-16 text-outline">Evolution_Log</h2>
+<div class="space-y-24">
+<!-- Item 1 -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+<div class="md:col-span-2 text-sm font-mono text-outline">2021 — PRESENT</div>
+<div class="md:col-span-4">
+<h3 class="text-2xl font-bold uppercase tracking-tighter">Infrastructure Architect</h3>
+<p class="text-sm text-outline mt-1">Global Tech Solutions</p>
+</div>
+<div class="md:col-span-6">
+<p class="text-on-surface-variant leading-relaxed">
+                                Orchestrating multi-region cloud infrastructures handling 40TB+ daily throughput. Implementing zero-trust security layers and autonomous scaling protocols.
+                            </p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+<div class="md:col-span-2 text-sm font-mono text-outline">2018 — 2021</div>
+<div class="md:col-span-4">
+<h3 class="text-2xl font-bold uppercase tracking-tighter">Senior Data Engineer</h3>
+<p class="text-sm text-outline mt-1">DataFlow Systems</p>
+</div>
+<div class="md:col-span-6">
+<p class="text-on-surface-variant leading-relaxed">
+                                Lead developer for the core ETL engine. Optimized query latency by 65% through custom partitioning strategies and distributed indexing.
+                            </p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+<div class="md:col-span-2 text-sm font-mono text-outline">2015 — 2018</div>
+<div class="md:col-span-4">
+<h3 class="text-2xl font-bold uppercase tracking-tighter">Systems Developer</h3>
+<p class="text-sm text-outline mt-1">Nexus Analytics</p>
+</div>
+<div class="md:col-span-6">
+<p class="text-on-surface-variant leading-relaxed">
+                                Built real-time monitoring tools for high-frequency trading platforms. Focused on low-latency messaging and memory-efficient data structures.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Projects - Bento Grid -->
+<section class="py-32 px-8 max-w-7xl mx-auto" id="work">
+<h2 class="text-sm font-bold tracking-[0.3em] uppercase mb-16 text-outline">Case_Studies</h2>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Case 1 -->
+<div class="md:col-span-8 bg-surface-container-lowest hairline-border p-12 group hover:bg-primary hover:text-on-primary transition-all duration-500 flex flex-col justify-between min-h-[500px]">
+<div>
+<label class="text-[10px] tracking-widest uppercase mb-6 block">01 / ANALYTICS</label>
+<h3 class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-8">Real-time Stream Processor</h3>
+<p class="text-lg max-w-xl opacity-70">A sub-second latency pipeline processing 1.2M events per second using Kafka and Flink. Designed for high availability with automatic failover clusters.</p>
+</div>
+<div class="mt-8">
+<span class="material-symbols-outlined text-6xl">insights</span>
+</div>
+</div>
+<!-- Case 2 -->
+<div class="md:col-span-4 bg-surface-container-high p-8 flex flex-col justify-between">
+<div class="aspect-[4/5] relative mb-6">
+<img class="w-full h-full object-cover filter grayscale" data-alt="Close-up of server racks in a dark data center with subtle blinking blue and white status lights, minimalist and clinical" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7wxyH6qaqIAxOnk2yF0-RUZs-9CA-GpHE8Q3vheWxH5U8-FqAGVpEzl9gEU4bcewyzvCqC7_b4vJqI-QHiWfU3ECH_Zrsr-Xl5_YlXrkiQavdzAt9vxQOtgmlB7HcyudmQNEBRql6bhAid1xsvzc9Asvquv1BGe4kYX61xSxdFjlGi8MD7uda1rcXUHG_iqOWzexBMtSCG3J73sRlbjcfGD2vqjLWmGCzpiHkhj4_XJFxtaAlnJDFNqSPPvILyMa9Q2mkHuYhljg"/>
+</div>
+<div>
+<h4 class="text-xl font-bold uppercase tracking-tighter">Distributed Crawlers</h4>
+<p class="text-sm text-on-surface-variant mt-2">Solving the node-coordination bottleneck in massive-scale web indexing.</p>
+</div>
+</div>
+<!-- Case 3 -->
+<div class="md:col-span-4 hairline-border p-8 flex flex-col">
+<span class="material-symbols-outlined text-4xl mb-4">dataset</span>
+<h4 class="text-xl font-bold uppercase tracking-tighter">Data Lake Mesh</h4>
+<p class="text-sm text-on-surface-variant mt-2 mb-8">Decentralizing ownership for a petabyte-scale lake house architecture.</p>
+<div class="mt-auto">
+<button class="w-full py-4 bg-primary text-on-primary font-bold uppercase text-xs tracking-widest hover:opacity-90 transition-opacity">Review Blueprint</button>
+</div>
+</div>
+<!-- Case 4 -->
+<div class="md:col-span-8 bg-surface-container p-12 relative overflow-hidden">
+<div class="relative z-10">
+<label class="text-[10px] tracking-widest uppercase mb-6 block">04 / INFRASTRUCTURE</label>
+<h3 class="text-4xl font-black uppercase tracking-tighter mb-4">The Sovereign Stack</h3>
+<p class="text-on-surface-variant max-w-md">Private cloud implementation for high-security financial entities, utilizing Rust-based middleware for maximum throughput.</p>
+</div>
+<div class="absolute right-0 bottom-0 opacity-10 scale-150 transform translate-x-1/4 translate-y-1/4">
+<span class="material-symbols-outlined text-[300px]">hub</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stack & Interests -->
+<section class="bg-primary text-on-primary py-32 px-8 overflow-hidden" id="stack">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+<div>
+<h2 class="text-sm font-bold tracking-[0.3em] uppercase mb-12 text-outline">Digital_Footprint</h2>
+<div class="space-y-8">
+<div class="flex items-baseline gap-4 border-b border-on-primary/10 pb-4">
+<span class="text-xs font-mono opacity-50">01</span>
+<span class="text-2xl font-bold uppercase tracking-tight">Functional Programming</span>
+</div>
+<div class="flex items-baseline gap-4 border-b border-on-primary/10 pb-4">
+<span class="text-xs font-mono opacity-50">02</span>
+<span class="text-2xl font-bold uppercase tracking-tight">Distributed Consensus</span>
+</div>
+<div class="flex items-baseline gap-4 border-b border-on-primary/10 pb-4">
+<span class="text-xs font-mono opacity-50">03</span>
+<span class="text-2xl font-bold uppercase tracking-tight">Post-Relational Models</span>
+</div>
+<div class="flex items-baseline gap-4 border-b border-on-primary/10 pb-4">
+<span class="text-xs font-mono opacity-50">04</span>
+<span class="text-2xl font-bold uppercase tracking-tight">System Reliability Engineering</span>
+</div>
+</div>
+</div>
+<div class="relative flex items-center justify-center">
+<div class="text-[200px] font-black opacity-5 leading-none absolute">DATA</div>
+<div class="bg-surface-container-lowest text-primary p-8 w-full max-w-sm relative z-10">
+<h5 class="text-xs font-black uppercase tracking-[0.3em] mb-6">Current_Tech_Stack</h5>
+<div class="grid grid-cols-2 gap-4">
+<div class="text-[10px] uppercase font-bold tracking-widest border border-primary/20 p-2">Apache Kafka</div>
+<div class="text-[10px] uppercase font-bold tracking-widest border border-primary/20 p-2">Rust / Scala</div>
+<div class="text-[10px] uppercase font-bold tracking-widest border border-primary/20 p-2">Kubernetes</div>
+<div class="text-[10px] uppercase font-bold tracking-widest border border-primary/20 p-2">Terraform</div>
+<div class="text-[10px] uppercase font-bold tracking-widest border border-primary/20 p-2">BigQuery</div>
+<div class="text-[10px] uppercase font-bold tracking-widest border border-primary/20 p-2">Vector DBs</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact / CTA -->
+<section class="py-48 px-8 text-center max-w-5xl mx-auto">
+<label class="text-[10px] tracking-[0.5em] uppercase text-outline mb-8 block">THE_THRESHOLD</label>
+<h2 class="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-12">Let's scale the flow.</h2>
+<p class="text-xl text-on-surface-variant max-w-xl mx-auto mb-12">Available for high-stakes architectural consulting and core infrastructure design.</p>
+<a class="inline-block px-12 py-6 bg-primary text-on-primary font-black uppercase text-sm tracking-[0.3em] hover:bg-on-surface-variant transition-colors duration-300" href="mailto:architect@aris.dev">
+                INITIATE_CONTACT
+            </a>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-[#f9f9f9] border-t border-gray-300">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 w-full max-w-7xl mx-auto">
+<div class="font-bold text-black uppercase tracking-widest font-['Inter'] text-[10px]">
+                © 2024 DATA_ENGINEER. ALL RIGHTS RESERVED.
+            </div>
+<div class="flex gap-12">
+<a class="font-['Inter'] text-[10px] tracking-widest uppercase text-gray-500 hover:text-black transition-all duration-200" href="#">GITHUB</a>
+<a class="font-['Inter'] text-[10px] tracking-widest uppercase text-gray-500 hover:text-black transition-all duration-200" href="#">LINKEDIN</a>
+<a class="font-['Inter'] text-[10px] tracking-widest uppercase text-gray-500 hover:text-black transition-all duration-200" href="#">RESUME</a>
+</div>
+</div>
+</footer>
+</body></html>

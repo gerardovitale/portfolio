@@ -3,23 +3,27 @@ import { execFileSync } from "node:child_process";
 const baseUrl = process.argv[2] ?? "http://127.0.0.1:18081";
 
 const routes = [
-  "/",
-  "/projects",
-  "/projects/",
-  "/experience",
-  "/experience/",
-  "/interests",
-  "/interests/",
-  "/es",
-  "/es/projects",
-  "/es/projects/",
-  "/es/experience",
-  "/es/experience/",
-  "/es/interests",
-  "/es/interests/",
+  { route: "/", status: 200 },
+  { route: "/es", status: 200 },
+  { route: "/projects", status: 301, location: "/#projects" },
+  { route: "/projects/", status: 301, location: "/#projects" },
+  { route: "/experience", status: 301, location: "/#experience" },
+  { route: "/experience/", status: 301, location: "/#experience" },
+  { route: "/interests", status: 301, location: "/#interests" },
+  { route: "/interests/", status: 301, location: "/#interests" },
+  { route: "/es/projects", status: 301, location: "/es#projects" },
+  { route: "/es/projects/", status: 301, location: "/es#projects" },
+  { route: "/es/experience", status: 301, location: "/es#experience" },
+  { route: "/es/experience/", status: 301, location: "/es#experience" },
+  { route: "/es/interests", status: 301, location: "/es#interests" },
+  { route: "/es/interests/", status: 301, location: "/es#interests" },
 ];
 
-async function assertRoute(route) {
+async function assertRoute({
+  route,
+  status: expectedStatus,
+  location: expectedLocation,
+}) {
   const headers = execFileSync("curl", ["-I", "-sS", `${baseUrl}${route}`], {
     encoding: "utf8",
   });
@@ -30,8 +34,14 @@ async function assertRoute(route) {
     ?.slice("location:".length)
     .trim();
 
-  if (status !== 200) {
-    throw new Error(`Expected 200 for ${route}, got ${status}`);
+  if (status !== expectedStatus) {
+    throw new Error(`Expected ${expectedStatus} for ${route}, got ${status}`);
+  }
+
+  if (expectedLocation && location !== expectedLocation) {
+    throw new Error(
+      `Expected redirect for ${route} to ${expectedLocation}, got ${location ?? "none"}`,
+    );
   }
 
   if (location && /:8081(?:\/|$)/i.test(location)) {
@@ -50,9 +60,10 @@ const homeHtml = execFileSync("curl", ["-sS", `${baseUrl}/`], {
 });
 
 for (const href of [
-  'href="/projects"',
-  'href="/experience"',
-  'href="/interests"',
+  'href="/#home"',
+  'href="/#projects"',
+  'href="/#experience"',
+  'href="/#interests"',
   'href="/es"',
 ]) {
   if (!homeHtml.includes(href)) {

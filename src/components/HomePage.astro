@@ -1,15 +1,41 @@
 ---
-import { getSiteContext } from "../data/site";
-import { localizeHref, type Locale } from "../lib/locale";
+import { ExperienceAccordion } from "./ExperienceAccordion";
+import { ProjectFilters } from "./ProjectFilters";
+import { getPageSection, getSiteContext } from "../data/site";
+import { type Locale } from "../lib/locale";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { localizeContentHref } from "../lib/routing";
 
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
-const { homeSection, navigationItems, optionalHomeCards, siteData } =
-  getSiteContext(locale);
+const siteContext = getSiteContext(locale);
+const {
+  allProjectTags,
+  enabledPageSections,
+  homeSection,
+  navigationItems,
+  optionalHomeCards,
+  siteData,
+} = siteContext;
+
+const projectsSection = enabledPageSections.some(
+  (section) => section.id === "projects",
+)
+  ? getPageSection(siteData, "projects")
+  : null;
+const experienceSection = enabledPageSections.some(
+  (section) => section.id === "experience",
+)
+  ? getPageSection(siteData, "experience")
+  : null;
+const interestsSection = enabledPageSections.some(
+  (section) => section.id === "interests",
+)
+  ? getPageSection(siteData, "interests")
+  : null;
 ---
 
 <BaseLayout
@@ -19,47 +45,53 @@ const { homeSection, navigationItems, optionalHomeCards, siteData } =
   showLocaleAlternates={true}
   siteData={siteData}
 >
-  <section class="section">
-    <div class="shell split">
-      <div class="stack">
-        <span class="eyebrow">{homeSection.hero.eyebrow}</span>
-        <h1 class="headline">{homeSection.hero.headline}</h1>
-        <p class="subheadline">{homeSection.hero.intro}</p>
-      </div>
-
-      <div class="stack">
-        <div class="card">
-          <div class="card-body stack">
-            <span class="eyebrow">{homeSection.hero.missionLabel}</span>
-            <p>{homeSection.hero.mission}</p>
-            <p class="muted">{homeSection.hero.availability}</p>
-            <div class="link-row">
-              <a
-                class="button-primary"
-                href={localizeHref(homeSection.hero.primaryCta.href, locale)}
-              >
-                {homeSection.hero.primaryCta.label}
-              </a>
-              <a
-                class="button-secondary"
-                href={localizeHref(homeSection.hero.secondaryCta.href, locale)}
-              >
-                {homeSection.hero.secondaryCta.label}
-              </a>
-            </div>
+  <section id="home" class="section route-anchor hero-section">
+    <div class="shell hero-shell">
+      <div class="hero-grid">
+        <div class="stack hero-copy">
+          <span class="eyebrow">{homeSection.hero.eyebrow}</span>
+          <h1 class="headline hero-headline">{homeSection.hero.headline}</h1>
+          <p class="subheadline hero-subheadline">{homeSection.hero.intro}</p>
+          <div class="link-row">
+            <a
+              class="button-primary"
+              href={localizeContentHref(
+                homeSection.hero.primaryCta.href,
+                locale,
+              )}
+            >
+              {homeSection.hero.primaryCta.label}
+            </a>
+            <a
+              class="button-secondary"
+              href={localizeContentHref(
+                homeSection.hero.secondaryCta.href,
+                locale,
+              )}
+            >
+              {homeSection.hero.secondaryCta.label}
+            </a>
           </div>
         </div>
-        <div class="surface-note">{homeSection.hero.supportNote}</div>
-      </div>
-    </div>
-  </section>
 
-  <section class="section">
-    <div class="shell">
-      <div class="grid grid-three">
+        <div class="hero-rail">
+          <article class="card feature-panel">
+            <div class="card-body stack">
+              <span class="eyebrow">{homeSection.hero.missionLabel}</span>
+              <p class="feature-copy">{homeSection.hero.mission}</p>
+              <div class="surface-note hero-note">
+                {homeSection.hero.availability}
+              </div>
+            </div>
+          </article>
+          <p class="hero-support">{homeSection.hero.supportNote}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-three stat-grid">
         {
           homeSection.stats.map((stat) => (
-            <article class="card">
+            <article class="card stat-card">
               <div class="card-body stack">
                 <span class="eyebrow">{stat.label}</span>
                 <strong class="stat-value">{stat.value}</strong>
@@ -72,41 +104,197 @@ const { homeSection, navigationItems, optionalHomeCards, siteData } =
     </div>
   </section>
 
-  <section class="section">
-    <div class="shell split">
-      <div class="stack">
+  <section class="section editorial-section">
+    <div class="shell editorial-grid">
+      <div class="section-intro sticky-intro">
         <span class="eyebrow">{homeSection.principlesIntro.eyebrow}</span>
         <h2 class="section-title">{homeSection.principlesIntro.title}</h2>
+        <p class="section-copy">{siteData.person.mission}</p>
       </div>
 
-      <div class="stack">
+      <div class="stack editorial-flow">
         {
-          homeSection.principles.map((principle) => (
-            <article class="card">
+          homeSection.principles.map((principle, index) => (
+            <article
+              class:list={["card principle-card", index === 1 && "offset-card"]}
+            >
               <div class="card-body stack">
+                <span class="eyebrow">0{index + 1}</span>
                 <h3 class="card-title">{principle.title}</h3>
                 <p class="muted">{principle.body}</p>
               </div>
             </article>
           ))
         }
+
+        {
+          optionalHomeCards.length > 0 && (
+            <div class="grid grid-two">
+              {optionalHomeCards.map((card) => (
+                <a class="card section-shortcut" href={card.href}>
+                  <div class="card-body stack">
+                    <span class="eyebrow">{card.eyebrow}</span>
+                    <h3 class="card-link-title">{card.title}</h3>
+                    <p class="muted">{card.description}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )
+        }
       </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="shell grid grid-two">
-      {
-        optionalHomeCards.map((card) => (
-          <a class="card" href={card.href}>
-            <div class="card-body stack">
-              <span class="eyebrow">{card.eyebrow}</span>
-              <h2 class="card-link-title">{card.title}</h2>
-              <p class="muted">{card.description}</p>
+  {
+    projectsSection && (
+      <section
+        id="projects"
+        class="section route-anchor editorial-section section-surface"
+      >
+        <div class="shell editorial-grid">
+          <div class="section-intro sticky-intro">
+            <span class="eyebrow">{projectsSection.intro.eyebrow}</span>
+            <h2 class="section-title">{projectsSection.intro.title}</h2>
+            <p class="section-copy">{projectsSection.intro.description}</p>
+            <div class="link-row">
+              {allProjectTags.map((tag) => (
+                <span class="pill">{tag}</span>
+              ))}
             </div>
-          </a>
-        ))
-      }
-    </div>
-  </section>
+          </div>
+
+          <div class="stack editorial-flow">
+            <article class="section-banner">
+              <span class="eyebrow">{projectsSection.interaction.eyebrow}</span>
+              <h3 class="card-link-title">
+                {projectsSection.interaction.title}
+              </h3>
+              <p class="muted">{projectsSection.interaction.description}</p>
+            </article>
+
+            <ProjectFilters
+              client:load
+              locale={locale}
+              projects={projectsSection.projects}
+              searchLabel={projectsSection.interaction.searchLabel}
+              searchPlaceholder={projectsSection.interaction.searchPlaceholder}
+              statusToolbarLabel={
+                projectsSection.interaction.statusToolbarLabel
+              }
+              statusLabels={projectsSection.interaction.statusLabels}
+              resultsPrefix={projectsSection.interaction.resultsPrefix}
+              resultNounSingular={
+                projectsSection.interaction.resultNounSingular
+              }
+              resultNounPlural={projectsSection.interaction.resultNounPlural}
+            />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    experienceSection && (
+      <section id="experience" class="section route-anchor editorial-section">
+        <div class="shell editorial-grid">
+          <div class="section-intro sticky-intro">
+            <span class="eyebrow">{experienceSection.intro.eyebrow}</span>
+            <h2 class="section-title">{experienceSection.intro.title}</h2>
+            <p class="section-copy">{experienceSection.intro.description}</p>
+            <div class="surface-note">
+              {experienceSection.timeline.description}
+            </div>
+          </div>
+
+          <div class="stack editorial-flow">
+            <article class="section-banner">
+              <span class="eyebrow">{experienceSection.timeline.eyebrow}</span>
+              <h3 class="card-link-title">
+                {experienceSection.timeline.title}
+              </h3>
+            </article>
+
+            <ExperienceAccordion
+              client:load
+              entries={experienceSection.entries}
+            />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    interestsSection && (
+      <section
+        id="interests"
+        class="section route-anchor editorial-section inverted-section"
+      >
+        <div class="shell editorial-grid">
+          <div class="section-intro sticky-intro">
+            <span class="eyebrow">
+              {interestsSection.skillsHeading.eyebrow}
+            </span>
+            <h2 class="section-title">
+              {interestsSection.skillsHeading.title}
+            </h2>
+            <p class="section-copy">{siteData.person.intro}</p>
+          </div>
+
+          <div class="stack editorial-flow">
+            <div class="grid grid-three">
+              {interestsSection.skillGroups.map((group) => (
+                <article class="card skill-card">
+                  <div class="card-body stack">
+                    <span class="eyebrow">{group.title}</span>
+                    <p class="muted">{group.description}</p>
+                    <div class="link-row">
+                      {group.items.map((item) => (
+                        <span class="pill">{item}</span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <article class="section-banner inverted-banner">
+              <span class="eyebrow">
+                {interestsSection.interestsHeading.eyebrow}
+              </span>
+              <h3 class="card-link-title">
+                {interestsSection.interestsHeading.title}
+              </h3>
+            </article>
+
+            <div class="grid grid-two">
+              {interestsSection.interests.map((interest) => (
+                <article class="card interest-card">
+                  <div class="card-body stack">
+                    <h3 class="card-title">{interest.title}</h3>
+                    <p class="muted">{interest.summary}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <article class="section-banner inverted-banner">
+              <span class="eyebrow">{interestsSection.nowHeading.eyebrow}</span>
+              <h3 class="card-link-title">
+                {interestsSection.nowHeading.title}
+              </h3>
+            </article>
+
+            <div class="now-grid">
+              {interestsSection.now.map((item) => (
+                <div class="surface-note now-note">{item}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

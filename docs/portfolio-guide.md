@@ -163,7 +163,8 @@ Recommended:
 
 ### `projects`
 
-Optional route at `/projects`.
+Optional anchored section within the single-page layout. Legacy route `/projects`
+redirects to the section anchor.
 
 It includes:
 
@@ -191,7 +192,8 @@ Allowed statuses:
 
 ### `experience`
 
-Optional route at `/experience`.
+Optional anchored section within the single-page layout. Legacy route
+`/experience` redirects to the section anchor.
 
 It includes:
 
@@ -211,7 +213,8 @@ Each entry includes:
 
 ### `interests`
 
-Optional route at `/interests`.
+Optional anchored section within the single-page layout. Legacy route
+`/interests` redirects to the section anchor.
 
 It includes:
 
@@ -439,7 +442,7 @@ The deploy stack now contains:
 
 This is continuous delivery through registry polling, not an immediate GitHub-orchestrated remote deploy. If you need near-instant rollouts, add a separate deploy step from GitHub Actions to the Pi over SSH or run a self-hosted runner on the Pi.
 
-After each deploy, verify the public hostname returns `200` for `/`, `/projects`, `/experience`, `/interests`, `/es`, and `/es/projects`, and confirm no `Location` header exposes `:8081`. If the issue reproduces in only one desktop browser, clear that browser's cached site data, redirect state, and DNS/HSTS state before changing the Pi stack.
+After each deploy, verify the public hostname returns `200` for `/` and `/es`, `301` redirects for legacy section URLs such as `/projects` and `/es/projects`, and confirm no `Location` header exposes `:8081`. If the issue reproduces in only one desktop browser, clear that browser's cached site data, redirect state, and DNS/HSTS state before changing the Pi stack.
 
 To force an update immediately instead of waiting for the next Watchtower poll, run:
 

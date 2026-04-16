@@ -189,10 +189,10 @@ describe("siteData", () => {
     expect(getSiteData("es").seo.title).toContain(
       "Data Engineer & Backend Developer",
     );
-    expect(spanishSiteContext.navigationItems[0]?.href).toBe("/es");
+    expect(spanishSiteContext.navigationItems[0]?.href).toBe("/es#home");
     expect(
       spanishSiteContext.navigationItems.some(
-        (item) => item.href === "/es/projects" && item.label === "Proyectos",
+        (item) => item.href === "/es#projects" && item.label === "Proyectos",
       ),
     ).toBe(true);
   });

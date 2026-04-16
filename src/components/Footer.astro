@@ -1,6 +1,7 @@
 ---
 import type { SiteData } from "../data/site";
-import { localizeHref, type Locale } from "../lib/locale";
+import type { Locale } from "../lib/locale";
+import { localizeContentHref } from "../lib/routing";
 
 interface Props {
   locale: Locale;
@@ -24,7 +25,7 @@ const { locale, siteData } = Astro.props;
         {
           siteData.person.socialLinks.map((link) => (
             <a
-              href={localizeHref(link.href, locale, link.localized)}
+              href={localizeContentHref(link.href, locale, link.localized)}
               target={link.external ? "_blank" : undefined}
               rel={link.external ? "noreferrer noopener" : undefined}
             >

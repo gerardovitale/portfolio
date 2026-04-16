@@ -1,11 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
-import { getSiteContext } from "../src/data/site";
+import { getPageSection, getSiteContext } from "../src/data/site";
 import {
   getCloseNavigationMenuLabel,
   getOpenNavigationMenuLabel,
   getPrimaryNavigationLabel,
 } from "../src/lib/locale";
 import { defaultSiteUrl } from "../src/lib/meta";
+import { getLocalizedSectionHref } from "../src/lib/routing";
 
 const locales = [
   {
@@ -21,10 +22,6 @@ const locales = [
     expectedLang: "es",
   },
 ];
-
-function getExpectedSectionRoute(rootRoute: string, sectionId: string) {
-  return rootRoute === "/" ? `/${sectionId}` : `${rootRoute}/${sectionId}`;
-}
 
 function isMobileProject() {
   return test.info().project.name === "mobile";
@@ -42,14 +39,18 @@ async function openNavigationMenu(page: Page, locale: "en" | "es") {
   });
 
   await expect(menuToggle).toBeVisible();
-  await expect(menuToggle).toHaveAttribute("aria-expanded", "false");
-  await expect(menuToggle).toHaveAttribute(
-    "aria-label",
-    getOpenNavigationMenuLabel(locale),
-  );
-  await expect(hiddenPrimaryNav).toBeHidden();
+  const isExpanded =
+    (await menuToggle.getAttribute("aria-expanded")) === "true";
 
-  await menuToggle.click();
+  if (!isExpanded) {
+    await expect(menuToggle).toHaveAttribute("aria-expanded", "false");
+    await expect(menuToggle).toHaveAttribute(
+      "aria-label",
+      getOpenNavigationMenuLabel(locale),
+    );
+    await expect(hiddenPrimaryNav).toBeHidden();
+    await menuToggle.click();
+  }
 
   await expect(menuToggle).toHaveAttribute("aria-expanded", "true");
   await expect(menuToggle).toHaveAttribute(
@@ -64,14 +65,13 @@ async function openNavigationMenu(page: Page, locale: "en" | "es") {
 }
 
 for (const { locale, rootRoute, context, expectedLang } of locales) {
-  test(`${locale} home page header exposes expected navigation links`, async ({
+  test(`${locale} header exposes localized anchor navigation`, async ({
     page,
   }) => {
     await page.goto(rootRoute);
     await page.waitForLoadState("networkidle");
 
     const menuToggle = page.locator("[data-mobile-nav-toggle]");
-    const homeLabel = context.navigationItems[0]?.label;
     const localeSwitcherHref = locale === "en" ? "/es" : "/";
 
     if (isMobileProject()) {
@@ -84,14 +84,10 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
       name: getPrimaryNavigationLabel(locale),
     });
 
-    await expect(
-      primaryNav.getByRole("link", { name: homeLabel! }),
-    ).toHaveAttribute("href", rootRoute);
-
-    for (const section of context.enabledPageSections) {
+    for (const item of context.navigationItems) {
       await expect(
-        primaryNav.getByRole("link", { name: section.navLabel, exact: true }),
-      ).toHaveAttribute("href", getExpectedSectionRoute(rootRoute, section.id));
+        primaryNav.getByRole("link", { name: item.label, exact: true }),
+      ).toHaveAttribute("href", item.href);
     }
 
     await expect(
@@ -101,7 +97,7 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
     ).toHaveAttribute("href", localeSwitcherHref);
   });
 
-  test(`${locale} routes are reachable from the home page`, async ({
+  test(`${locale} top navigation keeps users on the single page`, async ({
     page,
   }) => {
     await page.goto(rootRoute);
@@ -116,11 +112,6 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
     ).toBeVisible();
 
     for (const section of context.enabledPageSections) {
-      const expectedSectionRoute = getExpectedSectionRoute(
-        rootRoute,
-        section.id,
-      );
-
       await openNavigationMenu(page, locale);
 
       const primaryNav = page.getByRole("navigation", {
@@ -130,32 +121,66 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
       await primaryNav
         .getByRole("link", { name: section.navLabel, exact: true })
         .click();
-      await page.waitForLoadState("networkidle");
-      await expect(page).toHaveURL(new RegExp(`${expectedSectionRoute}$`));
-      await expect(
-        page.getByRole("heading", { level: 1, name: section.intro.title }),
-      ).toBeVisible();
 
-      await page.goto(rootRoute);
-      await page.waitForLoadState("networkidle");
+      await expect(page).toHaveURL(
+        new RegExp(`${getLocalizedSectionHref(section.id, locale)}$`),
+      );
+      await expect(page.locator(`#${section.id}`)).toBeVisible();
     }
   });
 
-  test(`${locale} section routes are reachable directly`, async ({ page }) => {
-    for (const section of context.enabledPageSections) {
-      const expectedSectionRoute = getExpectedSectionRoute(
-        rootRoute,
-        section.id,
-      );
+  test(`${locale} active nav state follows the hash and never defaults on SSR`, async ({
+    page,
+    request,
+  }) => {
+    const rootResponse = await request.get(rootRoute);
+    const rootHtml = await rootResponse.text();
 
-      await page.goto(expectedSectionRoute);
+    expect(rootHtml).not.toContain('aria-current="page"');
+
+    await page.goto(rootRoute);
+    await page.waitForLoadState("networkidle");
+    await openNavigationMenu(page, locale);
+
+    const primaryNav = page.getByRole("navigation", {
+      name: getPrimaryNavigationLabel(locale),
+    });
+    const homeLink = primaryNav.getByRole("link", {
+      name: context.navigationItems[0]!.label,
+      exact: true,
+    });
+
+    await expect(homeLink).toHaveAttribute("aria-current", "page");
+
+    const firstSection = context.enabledPageSections[0];
+
+    if (firstSection) {
+      await page.goto(getLocalizedSectionHref(firstSection.id, locale));
       await page.waitForLoadState("networkidle");
+      await openNavigationMenu(page, locale);
 
-      await expect(page).toHaveURL(new RegExp(`${expectedSectionRoute}$`));
-      await expect(page.locator("html")).toHaveAttribute("lang", expectedLang);
+      await expect(homeLink).not.toHaveAttribute("aria-current", "page");
       await expect(
-        page.getByRole("heading", { level: 1, name: section.intro.title }),
-      ).toBeVisible();
+        primaryNav.getByRole("link", {
+          name: firstSection.navLabel,
+          exact: true,
+        }),
+      ).toHaveAttribute("aria-current", "page");
+    }
+  });
+
+  test(`${locale} legacy section routes redirect into the single page`, async ({
+    page,
+  }) => {
+    for (const section of context.enabledPageSections) {
+      const legacyRoute =
+        locale === "en" ? `/${section.id}` : `/es/${section.id}`;
+
+      await page.goto(legacyRoute);
+      await expect(page).toHaveURL(
+        new RegExp(`${getLocalizedSectionHref(section.id, locale)}$`),
+      );
+      await expect(page.locator(`#${section.id}`)).toBeVisible();
     }
   });
 }
@@ -268,18 +293,66 @@ test("localized pages keep public asset links at the site root", async ({
 });
 
 test("language switcher preserves the current section", async ({ page }) => {
-  await page.goto("/projects");
+  await page.goto("/#projects");
+  await page.waitForLoadState("networkidle");
   await openNavigationMenu(page, "en");
   await page.getByRole("link", { name: /Español/i }).click();
 
-  await expect(page).toHaveURL(/\/es\/projects$/);
+  await expect(page).toHaveURL(/\/es#projects$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
 
   await openNavigationMenu(page, "es");
   await page.getByRole("link", { name: /English/i }).click();
 
-  await expect(page).toHaveURL(/\/projects$/);
+  await expect(page).toHaveURL(/\/#projects$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
+});
+
+test("project filtering and experience accordion still work on the single page", async ({
+  page,
+}) => {
+  const englishSiteContext = getSiteContext("en");
+  const projectsSection = getPageSection(
+    englishSiteContext.siteData,
+    "projects",
+  );
+  const experienceSection = getPageSection(
+    englishSiteContext.siteData,
+    "experience",
+  );
+  const featuredProject = projectsSection.projects.find(
+    (project) => project.status === "featured",
+  );
+  const alternateEntry = experienceSection.entries[1];
+
+  await page.goto("/#projects");
+  await page.waitForLoadState("networkidle");
+
+  if (featuredProject) {
+    await page.getByRole("searchbox").fill(featuredProject.title);
+    await expect(
+      page.getByRole("heading", { level: 2, name: featuredProject.title }),
+    ).toBeVisible();
+  }
+
+  await page.goto("/#experience");
+  await page.waitForLoadState("networkidle");
+
+  if (alternateEntry) {
+    const accordionButtons = page.locator(".experience-trigger");
+    const alternateButton = accordionButtons.nth(1);
+
+    await alternateButton.click();
+    await expect(alternateButton).toHaveAttribute("aria-expanded", "true");
+
+    const panelId = await alternateButton.getAttribute("aria-controls");
+
+    if (panelId) {
+      await expect(page.locator(`#${panelId}`)).toContainText(
+        alternateEntry.summary,
+      );
+    }
+  }
 });
 
 test("404 page does not advertise untranslated alternates", async ({
@@ -298,6 +371,7 @@ test("404 page does not advertise untranslated alternates", async ({
     page.locator('link[rel="alternate"][hreflang="x-default"]'),
   ).toHaveCount(0);
   await expect(page.getByRole("link", { name: /Español/i })).toHaveCount(0);
+  await expect(page.locator('[aria-current="page"]')).toHaveCount(0);
 });
 
 test("health endpoint responds with ok", async ({ request }) => {

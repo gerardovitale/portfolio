@@ -21,10 +21,19 @@ function getConfiguredSiteUrl() {
 }
 
 const site = getConfiguredSiteUrl();
+const redirects = {
+  "/projects": "/#projects",
+  "/experience": "/#experience",
+  "/interests": "/#interests",
+  "/es/projects": "/es#projects",
+  "/es/experience": "/es#experience",
+  "/es/interests": "/es#interests",
+};
 
 export default defineConfig({
   site,
   output: "static",
+  redirects,
   integrations: [react(), sitemap()],
   scopedStyleStrategy: "where",
   vite: {
