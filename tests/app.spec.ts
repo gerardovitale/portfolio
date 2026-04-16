@@ -1,6 +1,10 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { getSiteContext } from "../src/data/site";
-import { getPrimaryNavigationLabel } from "../src/lib/locale";
+import {
+  getCloseNavigationMenuLabel,
+  getOpenNavigationMenuLabel,
+  getPrimaryNavigationLabel,
+} from "../src/lib/locale";
 import { defaultSiteUrl } from "../src/lib/meta";
 
 const locales = [
@@ -22,6 +26,43 @@ function getExpectedSectionRoute(rootRoute: string, sectionId: string) {
   return rootRoute === "/" ? `/${sectionId}` : `${rootRoute}/${sectionId}`;
 }
 
+function isMobileProject() {
+  return test.info().project.name === "mobile";
+}
+
+async function openNavigationMenu(page: Page, locale: "en" | "es") {
+  if (!isMobileProject()) {
+    return;
+  }
+
+  const menuToggle = page.locator("[data-mobile-nav-toggle]");
+  const hiddenPrimaryNav = page.getByRole("navigation", {
+    name: getPrimaryNavigationLabel(locale),
+    includeHidden: true,
+  });
+
+  await expect(menuToggle).toBeVisible();
+  await expect(menuToggle).toHaveAttribute("aria-expanded", "false");
+  await expect(menuToggle).toHaveAttribute(
+    "aria-label",
+    getOpenNavigationMenuLabel(locale),
+  );
+  await expect(hiddenPrimaryNav).toBeHidden();
+
+  await menuToggle.click();
+
+  await expect(menuToggle).toHaveAttribute("aria-expanded", "true");
+  await expect(menuToggle).toHaveAttribute(
+    "aria-label",
+    getCloseNavigationMenuLabel(locale),
+  );
+  await expect(
+    page.getByRole("navigation", {
+      name: getPrimaryNavigationLabel(locale),
+    }),
+  ).toBeVisible();
+}
+
 for (const { locale, rootRoute, context, expectedLang } of locales) {
   test(`${locale} home page header exposes expected navigation links`, async ({
     page,
@@ -29,11 +70,19 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
     await page.goto(rootRoute);
     await page.waitForLoadState("networkidle");
 
+    const menuToggle = page.locator("[data-mobile-nav-toggle]");
+    const homeLabel = context.navigationItems[0]?.label;
+    const localeSwitcherHref = locale === "en" ? "/es" : "/";
+
+    if (isMobileProject()) {
+      await openNavigationMenu(page, locale);
+    } else {
+      await expect(menuToggle).toBeHidden();
+    }
+
     const primaryNav = page.getByRole("navigation", {
       name: getPrimaryNavigationLabel(locale),
     });
-    const homeLabel = context.navigationItems[0]?.label;
-    const localeSwitcherHref = locale === "en" ? "/es" : "/";
 
     await expect(
       primaryNav.getByRole("link", { name: homeLabel! }),
@@ -57,9 +106,7 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
   }) => {
     await page.goto(rootRoute);
     await page.waitForLoadState("networkidle");
-    const primaryNav = page.getByRole("navigation", {
-      name: getPrimaryNavigationLabel(locale),
-    });
+
     await expect(page.locator("html")).toHaveAttribute("lang", expectedLang);
     await expect(
       page.getByRole("heading", {
@@ -73,6 +120,12 @@ for (const { locale, rootRoute, context, expectedLang } of locales) {
         rootRoute,
         section.id,
       );
+
+      await openNavigationMenu(page, locale);
+
+      const primaryNav = page.getByRole("navigation", {
+        name: getPrimaryNavigationLabel(locale),
+      });
 
       await primaryNav
         .getByRole("link", { name: section.navLabel, exact: true })
@@ -172,11 +225,13 @@ test("localized pages keep public asset links at the site root", async ({
 
 test("language switcher preserves the current section", async ({ page }) => {
   await page.goto("/projects");
+  await openNavigationMenu(page, "en");
   await page.getByRole("link", { name: /Español/i }).click();
 
   await expect(page).toHaveURL(/\/es\/projects$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
 
+  await openNavigationMenu(page, "es");
   await page.getByRole("link", { name: /English/i }).click();
 
   await expect(page).toHaveURL(/\/projects$/);

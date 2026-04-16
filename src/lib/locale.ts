@@ -49,6 +49,16 @@ export function getPrimaryNavigationLabel(locale: Locale) {
   return locale === "en" ? "Primary navigation" : "Navegación principal";
 }
 
+export function getOpenNavigationMenuLabel(locale: Locale) {
+  return locale === "en" ? "Open navigation menu" : "Abrir menú de navegación";
+}
+
+export function getCloseNavigationMenuLabel(locale: Locale) {
+  return locale === "en"
+    ? "Close navigation menu"
+    : "Cerrar menú de navegación";
+}
+
 export function getLocaleInfoFromPathname(pathname: string) {
   const normalizedPath = normalizePathname(pathname);
   const [, firstSegment, ...remainingSegments] = normalizedPath.split("/");
