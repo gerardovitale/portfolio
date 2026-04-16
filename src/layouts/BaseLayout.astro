@@ -63,6 +63,11 @@ const localeSwitcherHref = showLocaleAlternates
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.dataset.motion = "enabled";
+      }
+    </script>
     <meta
       name="robots"
       content={noindex ? "noindex, nofollow" : "index, follow"}
@@ -115,5 +120,108 @@ const localeSwitcherHref = showLocaleAlternates
       <slot />
     </main>
     <Footer locale={locale} siteData={siteData} />
+    <script is:inline>
+      const motionRoot = document.documentElement;
+      const motionBody = document.body;
+
+      if (motionRoot.dataset.motion === "enabled" && motionBody) {
+        const revealTargets = Array.from(
+          document.querySelectorAll("[data-reveal]"),
+        );
+        const revealGroups = Array.from(
+          document.querySelectorAll("[data-reveal-group]"),
+        );
+
+        const setRevealDelay = (element) => {
+          if (!(element instanceof HTMLElement)) {
+            return;
+          }
+
+          const rawDelay = element.dataset.revealDelay;
+
+          if (!rawDelay) {
+            return;
+          }
+
+          const delay = Number.parseInt(rawDelay, 10);
+
+          if (Number.isFinite(delay)) {
+            element.style.setProperty("--reveal-delay", `${delay}ms`);
+          }
+        };
+
+        const markRevealed = (element) => {
+          if (element instanceof HTMLElement) {
+            element.classList.add("is-revealed");
+          }
+        };
+
+        const isInitiallyVisible = (element) => {
+          if (!(element instanceof HTMLElement)) {
+            return false;
+          }
+
+          const { bottom, top } = element.getBoundingClientRect();
+
+          return top <= window.innerHeight * 0.88 && bottom >= 0;
+        };
+
+        revealTargets.forEach((target) => {
+          setRevealDelay(target);
+
+          if (isInitiallyVisible(target)) {
+            markRevealed(target);
+          }
+        });
+
+        revealGroups.forEach((group) => {
+          setRevealDelay(group);
+
+          Array.from(group.children).forEach((child, index) => {
+            if (!(child instanceof HTMLElement) || !child.dataset.revealItem) {
+              return;
+            }
+
+            child.style.setProperty("--reveal-index", String(index));
+          });
+
+          if (isInitiallyVisible(group)) {
+            markRevealed(group);
+          }
+        });
+
+        motionBody.dataset.motionReady = "true";
+
+        if ("IntersectionObserver" in window) {
+          const revealObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                  return;
+                }
+
+                markRevealed(entry.target);
+                revealObserver.unobserve(entry.target);
+              });
+            },
+            {
+              rootMargin: "0px 0px -12% 0px",
+              threshold: 0.12,
+            },
+          );
+
+          [...revealTargets, ...revealGroups].forEach((target) => {
+            if (
+              target instanceof HTMLElement &&
+              !target.classList.contains("is-revealed")
+            ) {
+              revealObserver.observe(target);
+            }
+          });
+        } else {
+          [...revealTargets, ...revealGroups].forEach(markRevealed);
+        }
+      }
+    </script>
   </body>
 </html>

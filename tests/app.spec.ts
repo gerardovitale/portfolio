@@ -256,6 +256,71 @@ test("spanish home page publishes localized metadata and preserves alternate lin
   );
 });
 
+test("home page reveals offscreen sections when they scroll into view", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+
+  const experienceBanner = page.locator('[data-reveal="experience-banner"]');
+
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "enabled");
+  await expect(experienceBanner).not.toHaveClass(/is-revealed/);
+  await expect
+    .poll(async () => {
+      return experienceBanner.evaluate(
+        (element) => window.getComputedStyle(element).opacity,
+      );
+    })
+    .toBe("0");
+
+  await experienceBanner.scrollIntoViewIfNeeded();
+
+  await expect
+    .poll(async () => {
+      return experienceBanner.evaluate((element) =>
+        element.classList.contains("is-revealed"),
+      );
+    })
+    .toBe(true);
+  await expect
+    .poll(async () => {
+      return experienceBanner.evaluate(
+        (element) => window.getComputedStyle(element).opacity,
+      );
+    })
+    .toBe("1");
+});
+
+test("reduced-motion users receive visible content without scroll reveals", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+
+  const experienceBanner = page.locator('[data-reveal="experience-banner"]');
+
+  await expect(page.locator("html")).not.toHaveAttribute(
+    "data-motion",
+    "enabled",
+  );
+  await expect
+    .poll(async () => {
+      return experienceBanner.evaluate(
+        (element) => window.getComputedStyle(element).opacity,
+      );
+    })
+    .toBe("1");
+  await expect
+    .poll(async () => {
+      return experienceBanner.evaluate(
+        (element) => window.getComputedStyle(element).transform,
+      );
+    })
+    .toBe("none");
+});
+
 for (const { locale, rootRoute, context } of locales) {
   test(`${locale} home stats and principles use a uniform card treatment`, async ({
     page,

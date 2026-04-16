@@ -26,6 +26,10 @@
   --font-display: "Inter", "Avenir Next", "Segoe UI", sans-serif;
   --max-width: 76rem;
   --transition-fast: 180ms ease;
+  --reveal-distance: 20px;
+  --reveal-duration: 560ms;
+  --reveal-stagger-step: 90ms;
+  --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 *,
@@ -497,6 +501,38 @@ button {
   scroll-margin-top: 6rem;
 }
 
+html[data-motion="enabled"] body[data-motion-ready] [data-reveal],
+html[data-motion="enabled"]
+  body[data-motion-ready]
+  [data-reveal-group]
+  > [data-reveal-item] {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance), 0);
+  transition:
+    opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html[data-motion="enabled"]
+  body[data-motion-ready]
+  [data-reveal-group]
+  > [data-reveal-item] {
+  transition-delay: calc(
+    var(--reveal-delay, 0ms) +
+      (var(--reveal-index, 0) * var(--reveal-stagger-step))
+  );
+}
+
+html[data-motion="enabled"] body[data-motion-ready] [data-reveal].is-revealed,
+html[data-motion="enabled"]
+  body[data-motion-ready]
+  [data-reveal-group].is-revealed
+  > [data-reveal-item] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -549,5 +585,18 @@ button {
 
   .now-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal],
+  [data-reveal-group] > [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
