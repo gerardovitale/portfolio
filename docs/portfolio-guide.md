@@ -419,8 +419,9 @@ Prepare the Raspberry Pi once:
 4. copy `deploy/.env.pi.example` to `/opt/portfolio/.env`
 5. edit `/opt/portfolio/.env` with the production values
 6. create a Cloudflare named tunnel and a hostname for `gerardo-vitale.com`
-7. point that hostname at the local service `http://portfolio:8081`
-8. start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`
+7. point that hostname at the internal service `http://portfolio:8081`
+8. do not expose `:8081` on the public hostname or point the tunnel at `http://gerardo-vitale.com:8081`
+9. start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`
 
 The Pi runtime env file should contain:
 
@@ -437,6 +438,8 @@ The deploy stack now contains:
 - `cloudflared`: keeps an outbound tunnel from the Pi to Cloudflare
 
 This is continuous delivery through registry polling, not an immediate GitHub-orchestrated remote deploy. If you need near-instant rollouts, add a separate deploy step from GitHub Actions to the Pi over SSH or run a self-hosted runner on the Pi.
+
+After each deploy, verify the public hostname returns `200` for `/`, `/projects`, `/experience`, `/interests`, `/es`, and `/es/projects`, and confirm no `Location` header exposes `:8081`. If the issue reproduces in only one desktop browser, clear that browser's cached site data, redirect state, and DNS/HSTS state before changing the Pi stack.
 
 To force an update immediately instead of waiting for the next Watchtower poll, run:
 

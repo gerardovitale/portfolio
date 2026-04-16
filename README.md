@@ -123,9 +123,10 @@ Pi bootstrap:
 1. Create a deployment directory, for example `/opt/portfolio`.
 2. Copy `deploy/docker-compose.pi.yml` and `deploy/.env.pi.example` into that directory.
 3. Rename `deploy/.env.pi.example` to `.env` and set the real values.
-4. In Cloudflare Zero Trust, create a named tunnel and set a public hostname for `gerardo-vitale.com` targeting `http://portfolio:8081`.
-5. Put the generated tunnel token into `.env` as `CLOUDFLARE_TUNNEL_TOKEN`.
-6. Start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`.
+4. In Cloudflare Zero Trust, create a named tunnel and set a public hostname for `gerardo-vitale.com` targeting the internal service `http://portfolio:8081`.
+5. Do not expose `:8081` in the public hostname, and do not point the tunnel at `http://gerardo-vitale.com:8081`.
+6. Put the generated tunnel token into `.env` as `CLOUDFLARE_TUNNEL_TOKEN`.
+7. Start the stack with `docker compose --env-file .env -f docker-compose.pi.yml up -d`.
 
 Operational notes:
 
@@ -133,6 +134,8 @@ Operational notes:
 - You can raise or lower that interval in the Pi `.env` file if you want a different tradeoff between rollout speed and registry polling frequency.
 - This is continuous delivery through registry polling, not an immediate remote deploy from GitHub Actions.
 - Watchtower only updates containers explicitly labeled for this stack, so it will not restart unrelated services on the Pi.
+- After each deploy, verify the public hostname returns `200` for `/`, `/projects`, `/experience`, `/interests`, `/es`, and `/es/projects`, and confirm no `Location` header exposes `:8081`.
+- If only one desktop browser is broken while mobile and other clients work, clear that browser's cached site data, redirect state, and DNS/HSTS state before changing the server.
 - To force an immediate update without waiting for the next poll, run:
 
 ```bash

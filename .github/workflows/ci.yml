@@ -53,8 +53,30 @@ jobs:
       - name: End-to-end tests
         run: npm run test:e2e
 
-      - name: Validate container build
-        run: docker build --build-arg PUBLIC_SITE_URL=https://example.com .
+      - name: Build container image
+        run: docker build --build-arg PUBLIC_SITE_URL=https://example.com -t portfolio:test .
+
+      - name: Container smoke test
+        run: |
+          container_id=$(docker run -d -p 18081:8081 portfolio:test)
+          cleanup() {
+            docker stop "$container_id"
+          }
+          trap cleanup EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:18081/healthz.json >/dev/null; then
+              break
+            fi
+
+            if [ "$attempt" -eq 30 ]; then
+              docker logs "$container_id"
+              echo "Container did not become ready in time." >&2
+              exit 1
+            fi
+
+            sleep 1
+          done
+          npm run test:container-smoke -- http://127.0.0.1:18081
 
   publish:
     name: Publish image
